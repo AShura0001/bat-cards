@@ -17,12 +17,12 @@ def display_text(gwindow, text, color, x, y, font_size, Font):
     return screen_text_rect
 
 def support_window(window_size, main_file_directory):
-    gwindow = pygame.display.set_mode(window_size, pygame.NOFRAME)
+    supp_window = pygame.display.set_mode(window_size, pygame.NOFRAME)
     event_flag = True
     discord_flag = False
     report_a_bug_flag = False
 
-    gwindow.fill((black))
+    supp_window.fill((black))
     discord_support_icon = pygame.image.load(os.path.join(main_file_directory, "assets", "discord_support_icon.png")).convert_alpha()
     discord_support_icon_rect = discord_support_icon.get_rect(center=(180, 180))
 
@@ -52,9 +52,9 @@ def support_window(window_size, main_file_directory):
                     report_a_bug_flag = False
                 
         
-        gwindow.blit(discord_support_icon, discord_support_icon_rect)
-        gwindow.blit(report_a_bug_icon, report_a_bug_icon_rect)
-        gwindow.blit(red_cross, red_cross_rect)
+        supp_window.blit(discord_support_icon, discord_support_icon_rect)
+        supp_window.blit(report_a_bug_icon, report_a_bug_icon_rect)
+        supp_window.blit(red_cross, red_cross_rect)
         pygame.display.update()
 
 def login_page(big_window_size, small_window_size, main_file_directory):
@@ -87,6 +87,7 @@ def login_page(big_window_size, small_window_size, main_file_directory):
 
         if support_flag:
             support_window(small_window_size, main_file_directory)
+            support_flag = False
             
 
         for event in pygame.event.get():
