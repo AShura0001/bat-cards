@@ -5,6 +5,8 @@ import os
 black = (0, 0, 0)
 white = (255, 255, 255)
 GREY1 = (204, 204, 204)
+uni_red = (200, 0, 0)
+
 
 
 def display_text(gwindow, text, color, x, y, font_size, Font):
@@ -14,8 +16,49 @@ def display_text(gwindow, text, color, x, y, font_size, Font):
     gwindow.blit(screen_text, [x,y])
     return screen_text_rect
 
-def login_page(window_size, main_file_directory):
-    gwindow = pygame.display.set_mode(window_size)
+def support_window(window_size, main_file_directory):
+    gwindow = pygame.display.set_mode(window_size, pygame.NOFRAME)
+    event_flag = True
+    discord_flag = False
+    report_a_bug_flag = False
+
+    gwindow.fill((black))
+    discord_support_icon = pygame.image.load(os.path.join(main_file_directory, "assets", "discord_support_icon.png")).convert_alpha()
+    discord_support_icon_rect = discord_support_icon.get_rect(center=(180, 180))
+
+    report_a_bug_icon = pygame.image.load(os.path.join(main_file_directory, "assets", "report_a_bug_support_icon.png")).convert_alpha()
+    report_a_bug_icon_rect = report_a_bug_icon.get_rect(center=(180, 304))
+
+    red_cross = pygame.image.load(os.path.join(main_file_directory, "assets", "red_cross.png")).convert_alpha()
+    red_cross_rect = red_cross.get_rect(center=(15, 16))
+
+    while event_flag:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    event_flag = False
+            
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if discord_support_icon_rect.collidepoint(event.pos):
+                    discord_flag = True
+                    report_a_bug_flag = False
+                elif report_a_bug_icon_rect.collidepoint(event.pos):
+                    report_a_bug_flag = True
+                    discord_flag = False
+                elif red_cross_rect.collidepoint(event.pos):
+                    event_flag = False
+                else:
+                    discord_flag = False
+                    report_a_bug_flag = False
+                
+        
+        gwindow.blit(discord_support_icon, discord_support_icon_rect)
+        gwindow.blit(report_a_bug_icon, report_a_bug_icon_rect)
+        gwindow.blit(red_cross, red_cross_rect)
+        pygame.display.update()
+
+def login_page(big_window_size, small_window_size, main_file_directory):
+    gwindow = pygame.display.set_mode(big_window_size)
     arrow_login_page = pygame.image.load(os.path.join(main_file_directory, "assets", "arrow_login_page.png")).convert_alpha()
     arrow_login_page_rect = arrow_login_page.get_rect(center=(668.5, 300.5))
     user_id_text = ""
@@ -41,6 +84,10 @@ def login_page(window_size, main_file_directory):
     arrow_login_circle = pygame.draw.circle(gwindow, white, (671, 301), 21)
     
     while event_flag:
+
+        if support_flag:
+            support_window(small_window_size, main_file_directory)
+            
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
