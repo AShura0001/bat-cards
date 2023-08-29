@@ -88,6 +88,8 @@ def login_page(big_window_size, small_window_size, main_file_directory):
         if support_flag:
             support_window(small_window_size, main_file_directory)
             support_flag = False
+            event_flag = False
+            login_page(big_window_size, small_window_size, main_file_directory)
             
 
         for event in pygame.event.get():
