@@ -1,0 +1,10 @@
+f = open("temp.txt", "a+")
+f.seek(0)
+# f.truncate()
+# f.write("Hello World!\n")
+# f.write("How are You?")
+f.seek(0)
+lines = f.readlines()
+for line in lines:
+    set = line.split(" ")
+    print (set)

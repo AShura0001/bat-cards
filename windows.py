@@ -10,7 +10,7 @@ uni_red = (200, 0, 0)
 
 
 def display_text(gwindow, text, color, x, y, font_size, Font):
-    font = pygame.font.SysFont(Font, font_size)
+    font = pygame.font.Font(os.path.join(os.getcwd(), "assets", "{0}.TTF".format(Font)), font_size)
     screen_text = font.render(text, True, color)
     screen_text_rect = screen_text.get_rect(center = (x, y))
     gwindow.blit(screen_text, [x,y])
@@ -56,7 +56,6 @@ def support_window(window_size, main_file_directory):
         supp_window.blit(report_a_bug_icon, report_a_bug_icon_rect)
         supp_window.blit(red_cross, red_cross_rect)
         pygame.display.update()
-
 
 def dashboard_window(window_size, main_file_directory):
     dashboard_window = pygame.display.set_mode(window_size)
@@ -162,9 +161,44 @@ def dashboard_window(window_size, main_file_directory):
         Setting_btn_text = display_text(dashboard_window, "Setting", black, 535, 345, 28, "ARLRDBD")
         Logs_btn_text = display_text(dashboard_window, "Logs", black, 550, 390, 28, "ARLRDBD")
         
-        print(Play_flag, Inventory_flag, Shop_flag, Guide_flag, Setting_flag, Logs_flag)
+        # print(Play_flag, Inventory_flag, Shop_flag, Guide_flag, Setting_flag, Logs_flag)
         pygame.display.update()
 
+def mode_selector(window_size, main_file_directory):
+    mode_selector_window = pygame.display.set_mode(window_size)
+    mode_selector_window.fill(black)
+
+    solo_btn_image = pygame.image.load(os.path.join(main_file_directory, "assets", "solo_mode_btn.png")).convert_alpha()
+    solo_btn_image_rect = solo_btn_image.get_rect(center = (342, 300))
+
+    multiplayer_btn_image = pygame.image.load(os.path.join(main_file_directory, "assets", "multiplayer_mode_btn.png")).convert_alpha()
+    multiplayer_btn_image_rect = multiplayer_btn_image.get_rect(center = (610, 300))
+    event_flag = True
+    solo_mode_flag = False
+    multiplayer_mode_flag = False
+    while event_flag:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                event_flag = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    event_flag = False
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if solo_btn_image_rect.collidepoint(event.pos):
+                    solo_mode_flag = True
+                    multiplayer_mode_flag = False
+                elif multiplayer_btn_image_rect.collidepoint(event.pos):
+                    multiplayer_mode_flag = True
+                    solo_mode_flag = False
+
+        mode_selector_window.blit(solo_btn_image, solo_btn_image_rect)
+        mode_selector_window.blit(multiplayer_btn_image, multiplayer_btn_image_rect)
+        
+        press_ESC_text = display_text(mode_selector_window, "press ESC to exit", white, 19.55, 14.44, 17, "AGENCYR")
+        Choose_mode_text = display_text(mode_selector_window, "Choose A Mode", white, 194.83, 170, 90, "OLDENGL")
+        pygame.display.update()
+        
 def login_page(big_window_size, small_window_size, main_file_directory):
     gwindow = pygame.display.set_mode(big_window_size)
     arrow_login_page = pygame.image.load(os.path.join(main_file_directory, "assets", "arrow_login_page.png")).convert_alpha()
@@ -206,20 +240,21 @@ def login_page(big_window_size, small_window_size, main_file_directory):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     event_flag = False
+
                 if event.key == pygame.K_BACKSPACE:
-                    keys = pygame.key.get_pressed()
-                    if keys[pygame.K_BACKSPACE]:
-                        if enter_user_id_flag:
-                            user_id_text = user_id_text[:-1]
-                            user_id_text_stored = user_id_text_stored[:-1]
-                        elif enter_password_flag:
-                            user_password_text = user_password_text[:-1]
-                            user_password_text_stored = user_password_text_stored[:-1]
+                    if enter_user_id_flag:
+                        user_id_text = user_id_text[:-1]
+                        user_id_text_stored = user_id_text_stored[:-1]
+                    elif enter_password_flag:
+                        user_password_text = user_password_text[:-1]
+                        user_password_text_stored = user_password_text_stored[:-1]
+
                 elif id_writing_flag and enter_user_id_flag:
                     user_id_text += event.unicode
                     user_id_text_stored += event.unicode
+                
                 elif password_writing_flag and enter_password_flag:
-                    user_password_text += event.unicode
+                    user_password_text += "*"
                     user_password_text_stored += event.unicode
 
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -260,26 +295,57 @@ def login_page(big_window_size, small_window_size, main_file_directory):
                     id_writing_flag = False
                     password_writing_flag = False
 
-        display_text(gwindow, "BAT CARDS LOGIN", white, 206.66, 201.61, 33, "OCR A Extended")
+        display_text(gwindow, "BAT CARDS LOGIN", white, 206.66, 201.61, 33, "OCRAEXT")
         gwindow.blit(arrow_login_page, (arrow_login_page_rect))
         gwindow.blit(support_logo, (support_logo_rect))
 
         if not enter_user_id_flag and len(user_id_text) == 0:
-            display_text(gwindow, "Enter user ID", GREY1, 213.04, 238.15, 28, "OCR A Extended")
+            display_text(gwindow, "Enter user ID", GREY1, 213.04, 238.15, 28, "OCRAEXT")
         if not enter_password_flag and len(user_password_text) == 0: 
-            display_text(gwindow, "Enter password", GREY1, 213.04, 285.67, 28, "OCR A Extended")
+            display_text(gwindow, "Enter password", GREY1, 213.04, 285.67, 28, "OCRAEXT")
         
         if enter_user_id_flag:
             user_id_rect = pygame.draw.rect(gwindow, white, [206.66, 240.32, 435, 33])
-            user_id_text_rect = display_text(gwindow, user_id_text, black, 213.04, 238.15, 28, "OCR A Extended")
+            user_id_text_rect = display_text(gwindow, user_id_text, black, 213.04, 238.15, 28, "OCRAEXT")
             if user_id_text_rect.width > 434:
                 user_id_text = user_id_text[1:] 
 
         if enter_password_flag:
             user_password_rect = pygame.draw.rect(gwindow, white, [206.66, 287, 435, 33])
-            user_passowrd_text_rect = display_text(gwindow, user_password_text, black, 213.04, 285.67, 28, "OCR A Extended")
+            user_passowrd_text_rect = display_text(gwindow, user_password_text, black, 213.04, 285.67, 28, "OCRAEXT")
             if user_passowrd_text_rect.width > 434:
                 user_password_text = user_password_text[1:]
         
+        if submit_flag:
+            user_info = open(os.path.join(main_file_directory, "users", "{0}.batdata".format(user_id_text_stored)), "a+")
+            user_info.seek(0)
+            content = user_info.read()
+            if len(content) == 0:
+                user_info.write("username = ")
+                user_info.write(str(user_id_text_stored))
+                user_info.write("\n")
+                user_info.write("password = ")
+                user_info.write(str(user_password_text_stored))
         
+                event_flag = False
+                submit_flag = False
+                dashboard_window(big_window_size, main_file_directory)
+                user_info.close()
+            else:
+                user_info.seek(0)
+                user_data_packets = user_info.readlines()
+                data_set = []
+                for packet in user_data_packets:
+                    data = packet.split(" = ")
+                    data_set.append(data[1])
+                user_info.close()
+
+                if user_id_text_stored + str("\n") == data_set[0] and user_password_text_stored == data_set[1]:
+                    event_flag = False
+                    submit_flag = False
+                    dashboard_window(big_window_size, main_file_directory)
+                else:
+                    print("wrong credentials")
+                    print (data_set)
+
         pygame.display.update()

@@ -22,21 +22,18 @@ def display_text(gwindow, text, color, x, y, font_size, Font):
     gwindow.blit(screen_text, [x,y])
     return screen_text_rect
 
-def dashboard_window(window_size, main_file_directory):
-    dashboard_window = pygame.display.set_mode(window_size)
+def mode_selector(window_size, main_file_directory):
+    mode_selector_window = pygame.display.set_mode(window_size)
+    mode_selector_window.fill(black)
+
+    solo_btn_image = pygame.image.load(os.path.join(main_file_directory, "assets", "solo_mode_btn.png")).convert_alpha()
+    solo_btn_image_rect = solo_btn_image.get_rect(center = (342, 300))
+
+    multiplayer_btn_image = pygame.image.load(os.path.join(main_file_directory, "assets", "multiplayer_mode_btn.png")).convert_alpha()
+    multiplayer_btn_image_rect = multiplayer_btn_image.get_rect(center = (610, 300))
     event_flag = True
-
-    Play_flag = False
-    Inventory_flag = False
-    Shop_flag = False
-    Guide_flag = False
-    Setting_flag = False
-    Logs_flag = False
-
-    exit_dashboard_btn = pygame.image.load(os.path.join(main_file_directory, "assets", "exit_dashboard_btn.png")).convert_alpha()
-    exit_dashboard_btn_rect = exit_dashboard_btn.get_rect(center=(480, 468))
-
-    dashboard_window.fill((black))
+    solo_mode_flag = False
+    multiplayer_mode_flag = False
     while event_flag:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -46,88 +43,18 @@ def dashboard_window(window_size, main_file_directory):
                     event_flag = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if exit_dashboard_btn_rect.collidepoint(event.pos):
-                    event_flag = False
-                elif white_rectangle_1.collidepoint(event.pos):
-                    Play_flag = True
-                    Inventory_flag = False
-                    Shop_flag = False
-                    Guide_flag = False
-                    Setting_flag = False
-                    Logs_flag = False
+                if solo_btn_image_rect.collidepoint(event.pos):
+                    solo_mode_flag = True
+                    multiplayer_mode_flag = False
+                elif multiplayer_btn_image_rect.collidepoint(event.pos):
+                    multiplayer_mode_flag = True
+                    solo_mode_flag = False
 
-                elif white_rectangle_2.collidepoint(event.pos):
-                    Play_flag = False
-                    Inventory_flag = True
-                    Shop_flag = False
-                    Guide_flag = False
-                    Setting_flag = False
-                    Logs_flag = False
-                
-                elif white_rectangle_3.collidepoint(event.pos):
-                    Play_flag = False
-                    Inventory_flag = False
-                    Shop_flag = True
-                    Guide_flag = False
-                    Setting_flag = False
-                    Logs_flag = False
-                
-                elif white_rectangle_4.collidepoint(event.pos):
-                    Play_flag = False
-                    Inventory_flag = False
-                    Shop_flag = False
-                    Guide_flag = True
-                    Setting_flag = False
-                    Logs_flag = False
-                
-                elif white_rectangle_5.collidepoint(event.pos):
-                    Play_flag = False
-                    Inventory_flag = False
-                    Shop_flag = False
-                    Guide_flag = False
-                    Setting_flag = True
-                    Logs_flag = False
-                
-                elif white_rectangle_6.collidepoint(event.pos):
-                    Play_flag = False
-                    Inventory_flag = False
-                    Shop_flag = False
-                    Guide_flag = False
-                    Setting_flag = False
-                    Logs_flag = True
-                
-                else:
-                    Play_flag = False
-                    Inventory_flag = False
-                    Shop_flag = False
-                    Guide_flag = False
-                    Setting_flag = False
-                    Logs_flag = False
-
-        white_rectangle_1 = pygame.draw.rect(dashboard_window, white, ((260,297), (216, 35)))
-        white_rectangle_2 = pygame.draw.rect(dashboard_window, white, ((260,341), (216, 35)))
-        white_rectangle_3 = pygame.draw.rect(dashboard_window, white, ((260,385), (216, 35)))
-
-        white_rectangle_4 = pygame.draw.rect(dashboard_window, white, ((480,297), (216, 35)))
-        white_rectangle_5 = pygame.draw.rect(dashboard_window, white, ((480,341), (216, 35)))
-        white_rectangle_6 = pygame.draw.rect(dashboard_window, white, ((480,385), (216, 35)))
-
-        dashboard_window.blit(exit_dashboard_btn, exit_dashboard_btn_rect)
-
-        bat_text = display_text(dashboard_window, "B.A.T", white, 339, 144, 100, "OLDENGL")
-        cards_text = display_text(dashboard_window, "CARDS", white, 430, 240.5, 36, "COLONNA")
-        press_ESC_text = display_text(dashboard_window, "press ESC to exit", white, 19.55, 14.44, 17, "AGENCYR")
-
-        Play_btn_text = display_text(dashboard_window, "Play", black, 336.26, 300, 28, "ARLRDBD")
-        Inventory_btn_text = display_text(dashboard_window, "Inventory", black, 300, 345, 28, "ARLRDBD")
-        Shop_btn_text = display_text(dashboard_window, "Shop", black, 338.47, 390, 28, "ARLRDBD")
-
-        Guide_btn_text = display_text(dashboard_window, "Guide", black, 545, 300, 28, "ARLRDBD")
-        Setting_btn_text = display_text(dashboard_window, "Setting", black, 535, 345, 28, "ARLRDBD")
-        Logs_btn_text = display_text(dashboard_window, "Logs", black, 550, 390, 28, "ARLRDBD")
+        mode_selector_window.blit(solo_btn_image, solo_btn_image_rect)
+        mode_selector_window.blit(multiplayer_btn_image, multiplayer_btn_image_rect)
         
-        print(Play_flag, Inventory_flag, Shop_flag, Guide_flag, Setting_flag, Logs_flag)
+        press_ESC_text = display_text(mode_selector_window, "press ESC to exit", white, 19.55, 14.44, 17, "AGENCYR")
+        Choose_mode_text = display_text(mode_selector_window, "Choose A Mode", white, 194.83, 170, 90, "OLDENGL")
         pygame.display.update()
-
-dashboard_window(big_window_size, main_file_directory)
+mode_selector(big_window_size, main_file_directory)
 pygame.quit()
