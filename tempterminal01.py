@@ -5,7 +5,7 @@ import windows
 pygame.init()
 
 big_window_size = (960, 560)
-small_window_size = (360, 360)
+small_window_size = (360, 500)
 main_file_directory = os.getcwd()
 clock = pygame.time.Clock()
 
