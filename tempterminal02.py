@@ -22,18 +22,17 @@ def display_text(gwindow, text, color, x, y, font_size, Font):
     gwindow.blit(screen_text, [x,y])
     return screen_text_rect
 
-def mode_selector(window_size, main_file_directory):
-    mode_selector_window = pygame.display.set_mode(window_size)
-    mode_selector_window.fill(black)
-
+def solo_menu_selector(winodw_size, main_file_directory):
+    solo_menu_window = pygame.display.set_mode(winodw_size)
+    solo_menu_window.fill(black)
+    event_flag = True
     solo_btn_image = pygame.image.load(os.path.join(main_file_directory, "assets", "solo_mode_btn.png")).convert_alpha()
     solo_btn_image_rect = solo_btn_image.get_rect(center = (342, 300))
 
     multiplayer_btn_image = pygame.image.load(os.path.join(main_file_directory, "assets", "multiplayer_mode_btn.png")).convert_alpha()
     multiplayer_btn_image_rect = multiplayer_btn_image.get_rect(center = (610, 300))
-    event_flag = True
-    solo_mode_flag = False
-    multiplayer_mode_flag = False
+    
+
     while event_flag:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -41,20 +40,11 @@ def mode_selector(window_size, main_file_directory):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     event_flag = False
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if solo_btn_image_rect.collidepoint(event.pos):
-                    solo_mode_flag = True
-                    multiplayer_mode_flag = False
-                elif multiplayer_btn_image_rect.collidepoint(event.pos):
-                    multiplayer_mode_flag = True
-                    solo_mode_flag = False
-
-        mode_selector_window.blit(solo_btn_image, solo_btn_image_rect)
-        mode_selector_window.blit(multiplayer_btn_image, multiplayer_btn_image_rect)
         
-        press_ESC_text = display_text(mode_selector_window, "press ESC to exit", white, 19.55, 14.44, 17, "AGENCYR")
-        Choose_mode_text = display_text(mode_selector_window, "Choose A Mode", white, 194.83, 170, 90, "OLDENGL")
+        solo_menu_window.blit(solo_btn_image, solo_btn_image_rect)
+        solo_menu_window.blit(multiplayer_btn_image, multiplayer_btn_image_rect)
+        press_ESC_text = display_text(solo_menu_window, "press ESC to exit", white, 19.55, 14.44, 17, "AGENCYR")
+        Solo_menu_text = display_text(solo_menu_window, "Solo Menu", white, 270, 190, 90, "OLDENGL")
         pygame.display.update()
-mode_selector(big_window_size, main_file_directory)
+solo_menu_selector(big_window_size, main_file_directory)
 pygame.quit()

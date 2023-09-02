@@ -73,6 +73,12 @@ def dashboard_window(window_size, main_file_directory):
 
     dashboard_window.fill((black))
     while event_flag:
+
+        if Play_flag:
+            Play_flag = False
+            event_flag = False
+            mode_selector(window_size, main_file_directory)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 event_flag = False
@@ -176,7 +182,14 @@ def mode_selector(window_size, main_file_directory):
     event_flag = True
     solo_mode_flag = False
     multiplayer_mode_flag = False
+
+
     while event_flag:
+        if solo_mode_flag:
+            solo_mode_flag = False
+            event_flag = False
+            solo_menu_selector(window_size, main_file_directory)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 event_flag = False
@@ -198,7 +211,32 @@ def mode_selector(window_size, main_file_directory):
         press_ESC_text = display_text(mode_selector_window, "press ESC to exit", white, 19.55, 14.44, 17, "AGENCYR")
         Choose_mode_text = display_text(mode_selector_window, "Choose A Mode", white, 194.83, 170, 90, "OLDENGL")
         pygame.display.update()
+
+def solo_menu_selector(winodw_size, main_file_directory):
+    solo_menu_window = pygame.display.set_mode(winodw_size)
+    solo_menu_window.fill(black)
+    event_flag = True
+    solo_btn_image = pygame.image.load(os.path.join(main_file_directory, "assets", "solo_mode_btn.png")).convert_alpha()
+    solo_btn_image_rect = solo_btn_image.get_rect(center = (342, 300))
+
+    multiplayer_btn_image = pygame.image.load(os.path.join(main_file_directory, "assets", "multiplayer_mode_btn.png")).convert_alpha()
+    multiplayer_btn_image_rect = multiplayer_btn_image.get_rect(center = (610, 300))
+    
+
+    while event_flag:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                event_flag = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    event_flag = False
         
+        solo_menu_window.blit(solo_btn_image, solo_btn_image_rect)
+        solo_menu_window.blit(multiplayer_btn_image, multiplayer_btn_image_rect)
+        press_ESC_text = display_text(solo_menu_window, "press ESC to exit", white, 19.55, 14.44, 17, "AGENCYR")
+        Solo_menu_text = display_text(solo_menu_window, "Solo Menu", white, 270, 190, 90, "OLDENGL")
+        pygame.display.update()
+
 def login_page(big_window_size, small_window_size, main_file_directory):
     gwindow = pygame.display.set_mode(big_window_size)
     arrow_login_page = pygame.image.load(os.path.join(main_file_directory, "assets", "arrow_login_page.png")).convert_alpha()
