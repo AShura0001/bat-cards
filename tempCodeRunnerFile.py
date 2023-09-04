@@ -1,2 +1,2 @@
 
-fps = 60
+small_window_size = (360, 500)

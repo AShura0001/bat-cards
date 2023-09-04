@@ -76,8 +76,8 @@ def dashboard_window(window_size, main_file_directory):
 
         if Play_flag:
             Play_flag = False
-            event_flag = False
             mode_selector(window_size, main_file_directory)
+            break
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -187,9 +187,9 @@ def mode_selector(window_size, main_file_directory):
     while event_flag:
         if solo_mode_flag:
             solo_mode_flag = False
-            event_flag = False
             solo_menu_selector(window_size, main_file_directory)
-
+            break
+            
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 event_flag = False
@@ -216,13 +216,11 @@ def solo_menu_selector(winodw_size, main_file_directory):
     solo_menu_window = pygame.display.set_mode(winodw_size)
     solo_menu_window.fill(black)
     event_flag = True
-    solo_btn_image = pygame.image.load(os.path.join(main_file_directory, "assets", "solo_mode_btn.png")).convert_alpha()
-    solo_btn_image_rect = solo_btn_image.get_rect(center = (342, 300))
 
-    multiplayer_btn_image = pygame.image.load(os.path.join(main_file_directory, "assets", "multiplayer_mode_btn.png")).convert_alpha()
-    multiplayer_btn_image_rect = multiplayer_btn_image.get_rect(center = (610, 300))
-    
-
+    universes_btn_image = pygame.image.load(os.path.join(main_file_directory, "assets", "universes_btn.png")).convert_alpha()
+    universes_btn_image_rect = universes_btn_image.get_rect(center = (602, 350))
+    free_play_btn_image = pygame.image.load(os.path.join(main_file_directory, "assets", "free_play_btn.png")).convert_alpha()
+    free_play_btn_image_rect = free_play_btn_image.get_rect(center = (355, 350))
     while event_flag:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -231,8 +229,8 @@ def solo_menu_selector(winodw_size, main_file_directory):
                 if event.key == pygame.K_ESCAPE:
                     event_flag = False
         
-        solo_menu_window.blit(solo_btn_image, solo_btn_image_rect)
-        solo_menu_window.blit(multiplayer_btn_image, multiplayer_btn_image_rect)
+        solo_menu_window.blit(universes_btn_image, universes_btn_image_rect)
+        solo_menu_window.blit(free_play_btn_image, free_play_btn_image_rect)
         press_ESC_text = display_text(solo_menu_window, "press ESC to exit", white, 19.55, 14.44, 17, "AGENCYR")
         Solo_menu_text = display_text(solo_menu_window, "Solo Menu", white, 270, 190, 90, "OLDENGL")
         pygame.display.update()
@@ -278,6 +276,26 @@ def login_page(big_window_size, small_window_size, main_file_directory):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     event_flag = False
+                
+                if event.key == pygame.K_RETURN and password_writing_flag:
+                    submit_flag = True
+                    enter_user_id_flag = False
+                    enter_password_flag = False
+                    id_writing_flag = False
+                    password_writing_flag = False
+
+                # if event.key == pygame.K_TAB and id_writing_flag:
+                #     enter_user_id_flag = False
+                #     id_writing_flag = False
+                #     enter_password_flag = True
+                #     password_writing_flag = True
+                
+                # if event.key == pygame.K_TAB and password_writing_flag:
+                #     enter_password_flag = False
+                #     password_writing_flag = False
+                #     enter_user_id_flag = True
+                #     id_writing_flag = True
+
 
                 if event.key == pygame.K_BACKSPACE:
                     if enter_user_id_flag:
@@ -286,6 +304,7 @@ def login_page(big_window_size, small_window_size, main_file_directory):
                     elif enter_password_flag:
                         user_password_text = user_password_text[:-1]
                         user_password_text_stored = user_password_text_stored[:-1]
+
 
                 elif id_writing_flag and enter_user_id_flag:
                     user_id_text += event.unicode
@@ -379,9 +398,9 @@ def login_page(big_window_size, small_window_size, main_file_directory):
                 user_info.close()
 
                 if user_id_text_stored + str("\n") == data_set[0] and user_password_text_stored == data_set[1]:
-                    event_flag = False
                     submit_flag = False
                     dashboard_window(big_window_size, main_file_directory)
+                    break
                 else:
                     print("wrong credentials")
                     print (data_set)
