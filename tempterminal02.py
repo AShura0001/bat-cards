@@ -29,6 +29,10 @@ def game_p2(window_size , main_file_directory):
     gwindow_2.fill(black)
     event_flag = True
 
+    current_card_nos_1 = 26
+    current_card_nos_2 = 26
+
+    initial_time_sec = 10*60
     card_placement_holder_1 = pygame.image.load(os.path.join(main_file_directory, "assets", "card_placement_holder.png")).convert_alpha()
     card_placement_holder_1_rect = card_placement_holder_1.get_rect(center = (298, 250))
     
@@ -57,6 +61,15 @@ def game_p2(window_size , main_file_directory):
         gwindow_2.blit(time_counter_bar_1, time_counter_bar_1_rect)
         gwindow_2.blit(time_counter_bar_2, time_counter_bar_2_rect)
 
+        while initial_time_sec > 0:
+            initial_time_sec -= 1
+            time.sleep(1)
+            minutes = (initial_time_sec // 60)
+            seconds = (initial_time_sec % 60)
+            print (minutes,":",  seconds)
+
+        current_card_text_1 = display_text(gwindow_2, str(current_card_nos_1), white, 4, 155, 24, "OLDENGL")
+        current_card_text_2 = display_text(gwindow_2, str(current_card_nos_2), white, 730, 342, 24, "OLDENGL")
         press_ESC_text = display_text(gwindow_2, "press ESC to exit", white, 19.55, 14.44, 17, "AGENCYR")
         pygame.display.update()
 
