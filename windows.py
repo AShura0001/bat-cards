@@ -1,5 +1,6 @@
 import pygame
 import os
+import time
 
 #colors
 black = (0, 0, 0)
