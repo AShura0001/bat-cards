@@ -1,9 +1,11 @@
+import os
+
 class character:
     def __init__(self, 
                  name, title, form,
                  rank, ATK, HP, DP, SP, Battle_IQ,
-                 rating, signature_move 
-                 ):
+                 rating, signature_move, 
+                 card_image):
         self.name = name
         self.title = title
         self.form = form
@@ -15,6 +17,7 @@ class character:
         self.IQ = Battle_IQ 
         self.rating = rating
         self.signature_move = signature_move
+        self.card_image = card_image
         pass
 
 '''
@@ -32,12 +35,16 @@ sp - 0 to 5000 i.e. Speed Power
 iq - 0 to 5000 i.e. Battle IQ
 rating - SSS+, SS, S, A, B, C, D and U (U for undefined; should be most rare rating)
 signature_move - name of the signature move
+card_image - image of the card
 '''
+
+cwd = os.getcwd()
 
 meliodas_demon_king = character(
     "Meliodas", "Captain of the Seven Deadly Sins", "Demon King Form",
     1, 4782, 4905, 4678, 4982, 5000,
-    "SSS", "Full Counter")
+    "SSS", "Full Counter",
+    str(os.path.join(cwd, "assets", "cards", "seven deadly sins cards", "1_meliodas_demon_king.png")))
 
 escanor_the_one = character(
     "Escanor", "Lion's Sin of Pride", "The One Form - Daytime",
