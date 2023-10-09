@@ -6,6 +6,7 @@ import time
 black = (0, 0, 0)
 white = (255, 255, 255)
 GREY2 = (204, 204, 204)
+black_light = (26, 26, 26)
 uni_red = (200, 0, 0)
 
 
@@ -43,19 +44,11 @@ def game_p2(window_size , main_file_directory):
 
 
 
-    card_placement_holder_1 = pygame.image.load(os.path.join(
-                    main_file_directory,"assets", "card_placement_holder.png")
-                                                ).convert_alpha()
-    card_placement_holder_1_rect = card_placement_holder_1.get_rect(
-                                                            center = (298, 250)
-                                                            )
+    card_placement_holder_1 = pygame.image.load(os.path.join(main_file_directory,"assets", "card_placement_holder.png")).convert_alpha()
+    card_placement_holder_1_rect = card_placement_holder_1.get_rect(center = (278, 250))
     
-    card_placement_holder_2 = pygame.image.load(os.path.join(
-                    main_file_directory, "assets", "card_placement_holder.png")
-                                                ).convert_alpha()
-    card_placement_holder_2_rect = card_placement_holder_2.get_rect(
-                                                            center = (487, 250)
-                                                            )
+    card_placement_holder_2 = pygame.image.load(os.path.join(main_file_directory, "assets", "card_placement_holder.png")).convert_alpha()
+    card_placement_holder_2_rect = card_placement_holder_2.get_rect(center = (487, 250))
 
 
     time_counter_bar_1 = pygame.image.load(os.path.join(main_file_directory, "assets", "time_counter_bar_1.png")).convert_alpha()
@@ -80,6 +73,8 @@ def game_p2(window_size , main_file_directory):
     GW2_side_menu_panel = pygame.image.load(os.path.join(main_file_directory, "assets", "GW2_side_menu_panel.png")).convert_alpha()
     GW2_side_menu_panel_rect = GW2_side_menu_panel.get_rect(center = (858, 280))
 
+    chosen_attribute = pygame.image.load(os.path.join(main_file_directory, "assets", "chosen_attribute.png")).convert_alpha()
+    chosen_attribute_rect = chosen_attribute.get_rect(center = (384, 345))
 
     vertical_bar_markings = [(70 + (36*i)) for i in range(0, 13)]
     horizontal_bar_markings = [(56 + (54*i)) for i in range(0, 13)]
@@ -97,6 +92,9 @@ def game_p2(window_size , main_file_directory):
         gwindow_2.blit(cards_title_GW2, cards_title_GW2_rect)
         gwindow_2.blit(scroll_bar_vertical, scroll_bar_vertical_rect)
         vertical_scroll_bar_indicator = pygame.draw.circle(gwindow_2, uni_red, (950, vertical_scroll_bar_pos), 5)
+
+
+        gwindow_2.blit(chosen_attribute, chosen_attribute_rect)
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
@@ -157,11 +155,25 @@ def game_p2(window_size , main_file_directory):
                             horizontal_scroll_bar_pos = marking + 54
                             break
             
-            
-                
+        
+        attack_power_rect_btn = pygame.draw.rect(gwindow_2, black_light, ((19, 203), (196 , 32)))
+        health_power_rect_btn = pygame.draw.rect(gwindow_2, black_light, ((19, 244), (196 , 32)))
+        defense_power_rect_btn = pygame.draw.rect(gwindow_2, black_light, ((19, 285), (196 , 32)))
 
-        current_card_text_1 = display_text(gwindow_2, str(current_card_nos_1), white, 4, 155, 24, "OLDENGL")
-        current_card_text_2 = display_text(gwindow_2, str(current_card_nos_2), white, 730, 342, 24, "OLDENGL")
+        attack_power_text = display_text(gwindow_2, "Attack Power", white, 36, 203, 29, "COLONNA")
+        health_power_text = display_text(gwindow_2, "Health Power", white, 36, 244, 29, "COLONNA")
+        defense_power_text = display_text(gwindow_2, "Defense Power", white, 27, 285, 29, "COLONNA")
+
+        rank_rect_btn = pygame.draw.rect(gwindow_2, black_light, ((551, 203), (196 , 32)))
+        speed_power_rect_btn = pygame.draw.rect(gwindow_2, black_light, ((551, 244), (196 , 32)))
+        battle_IQ_rect_btn = pygame.draw.rect(gwindow_2, black_light, ((551, 285), (196 , 32)))
+
+        rank_text = display_text(gwindow_2, "Rank", white, 616, 203, 29, "COLONNA")
+        speed_power_text = display_text(gwindow_2, "Speed Power", white, 573, 244, 29, "COLONNA")
+        battle_IQ_text = display_text(gwindow_2, "Battle IQ", white, 598, 285, 29, "COLONNA")
+
+        current_card_no_text_1 = display_text(gwindow_2, str(current_card_nos_1), white, 4, 155, 24, "OLDENGL")
+        current_card_no_text_2 = display_text(gwindow_2, str(current_card_nos_2), white, 730, 342, 24, "OLDENGL")
         press_ESC_text = display_text(gwindow_2, "press ESC to exit", white, 19.55, 14.44, 17, "AGENCYR")
         pygame.display.update()
         
