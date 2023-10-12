@@ -76,6 +76,9 @@ def game_p2(window_size , main_file_directory):
     chosen_attribute = pygame.image.load(os.path.join(main_file_directory, "assets", "chosen_attribute.png")).convert_alpha()
     chosen_attribute_rect = chosen_attribute.get_rect(center = (384, 345))
 
+    place_button = pygame.image.load(os.path.join(main_file_directory, "assets", "place_button.png")).convert_alpha()
+    place_button_rect = place_button.get_rect(center = (385, 263))
+
     vertical_bar_markings = [(70 + (36*i)) for i in range(0, 13)]
     horizontal_bar_markings = [(56 + (54*i)) for i in range(0, 13)]
 
@@ -95,6 +98,8 @@ def game_p2(window_size , main_file_directory):
 
 
         gwindow_2.blit(chosen_attribute, chosen_attribute_rect)
+        gwindow_2.blit(place_button, place_button_rect)
+
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
