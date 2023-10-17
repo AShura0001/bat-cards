@@ -38,8 +38,8 @@ def game_p2(window_size , main_file_directory):
 
     current_card_nos_1 = 26
     current_card_nos_2 = 26
-    mark_value_vertical = 1
-    mark_value_horizontal = 1
+    mark_value_vertical = 0
+    mark_value_horizontal = 0
 
     initial_time_sec = 10*60
 
@@ -81,6 +81,11 @@ def game_p2(window_size , main_file_directory):
     place_button = pygame.image.load(os.path.join(main_file_directory, "assets", "place_button.png")).convert_alpha()
     place_button_rect = place_button.get_rect(center = (385, 263))
 
+    opponent_card_back = pygame.image.load(os.path.join(main_file_directory, "assets", "opponent_card_back.png")).convert_alpha()
+    for i in range (0, 6):
+        opponent_card_back_rect = opponent_card_back.get_rect(center = (70+(i*120), 84))
+        gwindow_2.blit(opponent_card_back, opponent_card_back_rect)
+
     vertical_bar_markings = [(70 + (36*i)) for i in range(0, 13)]
     horizontal_bar_markings = [(56 + (54*i)) for i in range(0, 13)]
 
@@ -121,16 +126,16 @@ def game_p2(window_size , main_file_directory):
                     vertical_indicator_flag = False
                 if (vertical_end_upper_rect.collidepoint(event.pos) and vertical_scroll_bar_pos > 70):
                     vertical_scroll_bar_pos -= 36
-                    mark_value_vertical -= 1
+                    mark_value_vertical = vertical_bar_markings.index(vertical_scroll_bar_pos)
                 if vertical_end_lower_rect.collidepoint(event.pos) and vertical_scroll_bar_pos < 502:
                     vertical_scroll_bar_pos += 36
-                    mark_value_vertical += 1
+                    mark_value_vertical = vertical_bar_markings.index(vertical_scroll_bar_pos)
                 if horizontal_end_left_rect.collidepoint(event.pos) and horizontal_scroll_bar_pos > 56:
                     horizontal_scroll_bar_pos -= 54
-                    mark_value_horizontal -= 1
+                    mark_value_horizontal = horizontal_bar_markings.index(horizontal_scroll_bar_pos)
                 if horizontal_end_right_rect.collidepoint(event.pos) and horizontal_scroll_bar_pos < 704:
                     horizontal_scroll_bar_pos += 54
-                    mark_value_horizontal += 1
+                    mark_value_horizontal = horizontal_bar_markings.index(horizontal_scroll_bar_pos)
 
             if event.type == pygame.MOUSEBUTTONUP:
                 vertical_indicator_flag = False
@@ -144,13 +149,13 @@ def game_p2(window_size , main_file_directory):
                     for marking in vertical_bar_markings[1:]:
                         if mouse[1] < marking:
                             vertical_scroll_bar_pos = marking - 36
-                            mark_value_vertical = vertical_bar_markings.index(marking)
+                            mark_value_vertical = vertical_bar_markings.index(vertical_scroll_bar_pos)
                             break
                 elif  event.type == pygame.MOUSEMOTION and event.rel[1] < 0:
                     for marking in vertical_bar_markings[:-1:-1]:
                         if mouse[1] > marking:
                             vertical_scroll_bar_pos = marking + 36
-                            mark_value_vertical = vertical_bar_markings.index(marking)
+                            mark_value_vertical = vertical_bar_markings.index(vertical_scroll_bar_pos)
                             break
             
             if horizontal_indicator_flag:
@@ -161,13 +166,13 @@ def game_p2(window_size , main_file_directory):
                     for marking in horizontal_bar_markings[1:]:
                         if mouse[0] < marking:
                             horizontal_scroll_bar_pos = marking - 54
-                            mark_value_horizontal = horizontal_bar_markings.index(marking)
+                            mark_value_horizontal = horizontal_bar_markings.index(horizontal_scroll_bar_pos)
                             break
                 elif  event.type == pygame.MOUSEMOTION and event.rel[0] < 0:
                     for marking in horizontal_bar_markings[:-1:-1]:
                         if mouse[0] > marking:
                             horizontal_scroll_bar_pos = marking + 54
-                            mark_value_horizontal = horizontal_bar_markings.index(marking)
+                            mark_value_horizontal = horizontal_bar_markings.index(horizontal_scroll_bar_pos)
                             break
             
         
@@ -191,8 +196,29 @@ def game_p2(window_size , main_file_directory):
         current_card_no_text_2 = display_text(gwindow_2, str(current_card_nos_2), white, 730, 342, 24, "OLDENGL")
         press_ESC_text = display_text(gwindow_2, "press ESC to exit", white, 19.55, 14.44, 17, "AGENCYR")
         
+        if mark_value_horizontal < 4:
+            card_indexes = []
+            for i in range((mark_value_horizontal*4)+1 , ((mark_value_horizontal+1)*4)+1): card_indexes.append(i)
+            card_1 = pygame.image.load(sevendeadlysins_index[card_indexes[0]].card_image).convert_alpha()
+            card_1 = pygame.transform.scale(card_1, (104, 140))
+            card_1_rect = card_1.get_rect(center = (98+(200*0), 456))
+            card_2 = pygame.image.load(sevendeadlysins_index[card_indexes[1]].card_image).convert_alpha()
+            card_2 = pygame.transform.scale(card_2, (104, 140))
+            card_2_rect = card_2.get_rect(center = (98+(200*1), 456))
+            card_3 = pygame.image.load(sevendeadlysins_index[card_indexes[2]].card_image).convert_alpha()
+            card_3 = pygame.transform.scale(card_3, (104, 140))
+            card_3_rect = card_1.get_rect(center = (98+(200*2), 456))
+            card_4 = pygame.image.load(sevendeadlysins_index[card_indexes[3]].card_image).convert_alpha()
+            card_4 = pygame.transform.scale(card_4, (104, 140))
+            card_4_rect = card_1.get_rect(center = (98+(200*3), 456))
+        
+        
+        gwindow_2.blit(card_1, card_1_rect)
+        gwindow_2.blit(card_2, card_2_rect)
+        gwindow_2.blit(card_3, card_3_rect)
+        gwindow_2.blit(card_4, card_4_rect)
 
-        print(mark_value_horizontal, mark_value_vertical)
+        # print(mark_value_horizontal, mark_value_vertical)
         pygame.display.update()
         
         # while initial_time_sec > 0:

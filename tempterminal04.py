@@ -179,3 +179,7 @@ index = {
     15 : monspeet_hellfire_master,
     16 : sariel_skyward_guardian
     }
+
+card_indexes = [1,3,4]
+print (index[16].card_image)
+# print (str(os.path.join(cwd, "assets", "cards", "seven deadly sins cards", "16_sariel_skyward_guardian.png")))
