@@ -2,7 +2,7 @@ import pygame
 import os
 import time
 from sevendeadlysins import sevendeadlysins_index
-
+import random
 
 #colors
 black = (0, 0, 0)
@@ -29,6 +29,8 @@ def display_text(gwindow, text, color, x, y, font_size, Font):
     return screen_text_rect
 
 
+
+
 def game_p2(window_size , main_file_directory):
     gwindow_2 = pygame.display.set_mode(window_size)
     gwindow_2.fill(black)
@@ -37,18 +39,35 @@ def game_p2(window_size , main_file_directory):
     chosen_attribute_index = 0
     attribute_flag = False
     card_holder_flag_1 = True
-    
-    # vertical_indicator_flag = False
+    card_holder_flag_2 = True
+    place_card_flag_1 = False
+    place_card_flag_2 = False
+    attribute_lock = False
+
+    num_cards_avl = 16
+    card_set_1 = []
+    card_set_2 = []
+
+    while (len(card_set_1) < 8) :
+        card_rank_a = random.randint(1, 16)
+        if (card_rank_a not in card_set_1):
+            card_set_1.append(card_rank_a)
+
+    while (len(card_set_2) < 8) :
+        card_rank_b = random.randint(1, 16)
+        if (card_rank_b not in card_set_1) and (card_rank_b not in card_set_2):
+            card_set_2.append(card_rank_b)
+
+    card_set_1.sort()
+    card_set_2.sort()
     horizontal_indicator_flag = False
 
     current_card_nos_1 = 26
     current_card_nos_2 = 26
-    # mark_value_vertical = 0
     mark_value_horizontal = 0
 
     initial_time_sec = 10*60
 
-    # vertical_scroll_bar_pos = 70
     horizontal_scroll_bar_pos = 56
 
     card_placement_holder_1 = pygame.image.load(os.path.join(main_file_directory,"assets", "card_placement_holder.png")).convert_alpha()
@@ -64,11 +83,6 @@ def game_p2(window_size , main_file_directory):
     time_counter_bar_2 = pygame.image.load(os.path.join(main_file_directory, "assets", "time_counter_bar_2.png")).convert_alpha()
     time_counter_bar_2_rect = time_counter_bar_2.get_rect(center = (380, 355))
 
-    # scroll_bar_vertical = pygame.image.load(os.path.join(main_file_directory, "assets", "scroll bar vertical GW2.png")).convert_alpha()
-    # scroll_bar_vertical_rect = scroll_bar_vertical.get_rect(center = (950, 285))
-    # vertical_end_upper_rect = pygame.Rect((940 , 32), (20, 12))
-    # vertical_end_lower_rect = pygame.Rect((940 , 523), (20, 12))
-
     scroll_bar_horizontal = pygame.image.load(os.path.join(main_file_directory, "assets", "scroll bar horizontal GW2.png")).convert_alpha()
     scroll_bar_horizontal_rect = scroll_bar_horizontal.get_rect(center = (378, 548))
     horizontal_end_left_rect = pygame.Rect((0 , 538), (22, 20))
@@ -80,8 +94,8 @@ def game_p2(window_size , main_file_directory):
     GW2_side_menu_panel = pygame.image.load(os.path.join(main_file_directory, "assets", "GW2_side_menu_panel.png")).convert_alpha()
     GW2_side_menu_panel_rect = GW2_side_menu_panel.get_rect(center = (858, 280))
 
-    chosen_attribute = pygame.image.load(os.path.join(main_file_directory, "assets", "chosen_attribute.png")).convert_alpha()
-    chosen_attribute_rect = chosen_attribute.get_rect(center = (384, 345))
+    chosen_attribute_bg = pygame.image.load(os.path.join(main_file_directory, "assets", "chosen_attribute.png")).convert_alpha()
+    chosen_attribute_bg_rect = chosen_attribute_bg.get_rect(center = (384, 345))
 
     place_button = pygame.image.load(os.path.join(main_file_directory, "assets", "place_button.png")).convert_alpha()
     place_button_rect = place_button.get_rect(center = (385, 263))
@@ -91,15 +105,16 @@ def game_p2(window_size , main_file_directory):
         opponent_card_back_rect = opponent_card_back.get_rect(center = (70+(i*120), 84))
         gwindow_2.blit(opponent_card_back, opponent_card_back_rect)
 
-    vertical_bar_markings = [(70 + (36*i)) for i in range(0, 13)]
     horizontal_bar_markings = [(56 + (54*i)) for i in range(0, 13)]
     
 
     attributes_list = ["", "Rank", "Attack Power", "Health Power", "Defense Power", "Speed Power", "Battle IQ"]
     while event_flag:
+
         if card_holder_flag_1:
             gwindow_2.blit(card_placement_holder_1, card_placement_holder_1_rect)
-        gwindow_2.blit(card_placement_holder_2, card_placement_holder_2_rect)
+        if card_holder_flag_2:
+            gwindow_2.blit(card_placement_holder_2, card_placement_holder_2_rect)
         gwindow_2.blit(time_counter_bar_1, time_counter_bar_1_rect)
         gwindow_2.blit(time_counter_bar_2, time_counter_bar_2_rect)
         gwindow_2.blit(scroll_bar_horizontal, scroll_bar_horizontal_rect)
@@ -108,11 +123,9 @@ def game_p2(window_size , main_file_directory):
 
         gwindow_2.blit(GW2_side_menu_panel, GW2_side_menu_panel_rect)
         gwindow_2.blit(cards_title_GW2, cards_title_GW2_rect)
-        # gwindow_2.blit(scroll_bar_vertical, scroll_bar_vertical_rect)
-        # vertical_scroll_bar_indicator = pygame.draw.circle(gwindow_2, uni_red, (950, vertical_scroll_bar_pos), 5)
 
 
-        gwindow_2.blit(chosen_attribute, chosen_attribute_rect)
+        gwindow_2.blit(chosen_attribute_bg, chosen_attribute_bg_rect)
         gwindow_2.blit(place_button, place_button_rect)
 
         for event in pygame.event.get():
@@ -125,19 +138,8 @@ def game_p2(window_size , main_file_directory):
                     event_flag = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                # print (pygame.mouse.get_pos())
-                # if scroll_bar_vertical_rect.collidepoint(event.pos):
-                #     vertical_indicator_flag = True
-                #     horizontal_indicator_flag = False
                 if scroll_bar_horizontal_rect.collidepoint(event.pos):
                     horizontal_indicator_flag = True
-                #     vertical_indicator_flag = False
-                # if (vertical_end_upper_rect.collidepoint(event.pos) and vertical_scroll_bar_pos > 70):
-                #     vertical_scroll_bar_pos -= 36
-                #     mark_value_vertical = vertical_bar_markings.index(vertical_scroll_bar_pos)
-                # if vertical_end_lower_rect.collidepoint(event.pos) and vertical_scroll_bar_pos < 502:
-                #     vertical_scroll_bar_pos += 36
-                #     mark_value_vertical = vertical_bar_markings.index(vertical_scroll_bar_pos)
                 if horizontal_end_left_rect.collidepoint(event.pos) and horizontal_scroll_bar_pos > 56:
                     horizontal_scroll_bar_pos -= 54
                     mark_value_horizontal = horizontal_bar_markings.index(horizontal_scroll_bar_pos)
@@ -145,60 +147,48 @@ def game_p2(window_size , main_file_directory):
                     horizontal_scroll_bar_pos += 54
                     mark_value_horizontal = horizontal_bar_markings.index(horizontal_scroll_bar_pos)
                 
-                if rank_rect_btn.collidepoint(event.pos):
-                    chosen_attribute_index = 1
-                    attribute_flag = True
-                if attack_power_rect_btn.collidepoint(event.pos):
-                    chosen_attribute_index = 2
-                    attribute_flag = True
-                if health_power_rect_btn.collidepoint(event.pos):
-                    chosen_attribute_index = 3
-                    attribute_flag = True
-                if defense_power_rect_btn.collidepoint(event.pos):
-                    chosen_attribute_index = 4
-                    attribute_flag = True
-                if speed_power_rect_btn.collidepoint(event.pos):
-                    chosen_attribute_index = 5
-                    attribute_flag = True
-                if battle_IQ_rect_btn.collidepoint(event.pos):
-                    chosen_attribute_index = 6
-                    attribute_flag = True
+                if not attribute_lock:
+                    if rank_rect_btn.collidepoint(event.pos):
+                        chosen_attribute_index = 1
+                        attribute_flag = True
+                    if attack_power_rect_btn.collidepoint(event.pos):
+                        chosen_attribute_index = 2
+                        attribute_flag = True
+                    if health_power_rect_btn.collidepoint(event.pos):
+                        chosen_attribute_index = 3
+                        attribute_flag = True
+                    if defense_power_rect_btn.collidepoint(event.pos):
+                        chosen_attribute_index = 4
+                        attribute_flag = True
+                    if speed_power_rect_btn.collidepoint(event.pos):
+                        chosen_attribute_index = 5
+                        attribute_flag = True
+                    if battle_IQ_rect_btn.collidepoint(event.pos):
+                        chosen_attribute_index = 6
+                        attribute_flag = True
 
-                if card_1_rect.collidepoint(event.pos):
-                    card_holder_flag_1 = False
-                    gwindow_2.blit(card_1, card_placement_holder_1_rect)
-                if card_2_rect.collidepoint(event.pos):
-                    card_holder_flag_1 = False
-                    gwindow_2.blit(card_2, card_placement_holder_1_rect)
-                if card_3_rect.collidepoint(event.pos):
-                    card_holder_flag_1 = False
-                    gwindow_2.blit(card_3, card_placement_holder_1_rect)
-                if card_4_rect.collidepoint(event.pos):
-                    card_holder_flag_1 = False
-                    gwindow_2.blit(card_4, card_placement_holder_1_rect)
+                    if card_1_rect.collidepoint(event.pos):
+                        card_holder_flag_1 = False
+                        gwindow_2.blit(card_1, card_placement_holder_1_rect)
+                    if card_2_rect.collidepoint(event.pos):
+                        card_holder_flag_1 = False
+                        gwindow_2.blit(card_2, card_placement_holder_1_rect)
+                    if card_3_rect.collidepoint(event.pos):
+                        card_holder_flag_1 = False
+                        gwindow_2.blit(card_3, card_placement_holder_1_rect)
+                    if card_4_rect.collidepoint(event.pos):
+                        card_holder_flag_1 = False
+                        gwindow_2.blit(card_4, card_placement_holder_1_rect)
+
+
+                    if place_button_rect.collidepoint(event.pos) and attribute_flag == True:
+                        place_card_flag_1 = True
+                        attribute_lock = True    
                     
-                
 
             if event.type == pygame.MOUSEBUTTONUP:
-                # vertical_indicator_flag = False
                 horizontal_indicator_flag = False
             
-            # if vertical_indicator_flag:
-            #     mouse = pygame.mouse.get_pos()
-            #     if mouse[1] in vertical_bar_markings:
-            #         vertical_scroll_bar_pos = mouse[1]
-            #     elif  event.type == pygame.MOUSEMOTION and event.rel[1] > 0:
-            #         for marking in vertical_bar_markings[1:]:
-            #             if mouse[1] < marking:
-            #                 vertical_scroll_bar_pos = marking - 36
-            #                 mark_value_vertical = vertical_bar_markings.index(vertical_scroll_bar_pos)
-            #                 break
-            #     elif  event.type == pygame.MOUSEMOTION and event.rel[1] < 0:
-            #         for marking in vertical_bar_markings[:-1:-1]:
-            #             if mouse[1] > marking:
-            #                 vertical_scroll_bar_pos = marking + 36
-            #                 mark_value_vertical = vertical_bar_markings.index(vertical_scroll_bar_pos)
-            #                 break
             
             if horizontal_indicator_flag:
                 mouse = pygame.mouse.get_pos()
@@ -238,9 +228,9 @@ def game_p2(window_size , main_file_directory):
         current_card_no_text_2 = display_text(gwindow_2, str(current_card_nos_2), white, 730, 342, 24, "OLDENGL")
         press_ESC_text = display_text(gwindow_2, "press ESC to exit", white, 19.55, 14.44, 17, "AGENCYR")
         
-        if mark_value_horizontal < 4:
+        if mark_value_horizontal < 2:
             card_indexes = []
-            for i in range((mark_value_horizontal*4)+1 , ((mark_value_horizontal+1)*4)+1): card_indexes.append(i)
+            for i in range((mark_value_horizontal*4) , ((mark_value_horizontal+1)*4)): card_indexes.append(card_set_1[i])
             
             
             card_1 = pygame.image.load(sevendeadlysins_index[card_indexes[0]].card_image).convert_alpha()
@@ -300,18 +290,8 @@ def game_p2(window_size , main_file_directory):
         gwindow_2.blit(card_3, card_3_rect)
         gwindow_2.blit(card_4, card_4_rect)
 
-        # print(mark_value_horizontal, mark_value_vertical)
-        # print(attributes_list[chosen_attribute_index])
-
-        display_text(gwindow_2, attributes_list[chosen_attribute_index], black, 330, 335, 18, "OCRAEXT")
+        chosen_attribute_final = attributes_list[chosen_attribute_index]
+        display_text(gwindow_2, chosen_attribute_final, black, 330, 335, 18, "OCRAEXT")
         pygame.display.update()
-        
-        # while initial_time_sec > 0:
-        #     initial_time_sec -= 1
-        #     time.sleep(1)
-        #     minutes = (initial_time_sec // 60)
-        #     seconds = (initial_time_sec % 60)
-        #     print (minutes,":",  seconds)
-
 game_p2(big_window_size, main_file_directory)
 pygame.quit()
