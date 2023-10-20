@@ -43,6 +43,17 @@ def game_p2(window_size , main_file_directory):
     place_card_flag_1 = False
     place_card_flag_2 = False
     attribute_lock = False
+    
+
+    chosen_card_index = 0
+
+    rank_usable_flag = True
+    attack_usable_flag = True
+    health_usable_flag = True
+    defense_usable_flag = True
+    speed_usable_flag = True
+    battle_IQ_usable_flag = True
+
 
     num_cards_avl = 16
     card_set_1 = []
@@ -124,6 +135,7 @@ def game_p2(window_size , main_file_directory):
         gwindow_2.blit(GW2_side_menu_panel, GW2_side_menu_panel_rect)
         gwindow_2.blit(cards_title_GW2, cards_title_GW2_rect)
 
+        chosen_attribute_final = attributes_list[chosen_attribute_index]
 
         gwindow_2.blit(chosen_attribute_bg, chosen_attribute_bg_rect)
         gwindow_2.blit(place_button, place_button_rect)
@@ -170,21 +182,46 @@ def game_p2(window_size , main_file_directory):
                     if card_1_rect.collidepoint(event.pos):
                         card_holder_flag_1 = False
                         gwindow_2.blit(card_1, card_placement_holder_1_rect)
+                        chosen_card_index = 1
+
                     if card_2_rect.collidepoint(event.pos):
                         card_holder_flag_1 = False
                         gwindow_2.blit(card_2, card_placement_holder_1_rect)
+                        chosen_card_index = 2
                     if card_3_rect.collidepoint(event.pos):
                         card_holder_flag_1 = False
+                        chosen_card_index = 3
                         gwindow_2.blit(card_3, card_placement_holder_1_rect)
                     if card_4_rect.collidepoint(event.pos):
                         card_holder_flag_1 = False
                         gwindow_2.blit(card_4, card_placement_holder_1_rect)
+                        chosen_card_index = 4
 
-
+                    if not card_holder_flag_1:
+                        rank_usable_flag = sevendeadlysins_index[card_indexes[chosen_card_index]].rank_flag
+                        attack_usable_flag = sevendeadlysins_index[card_indexes[chosen_card_index]].atk_flag
+                        health_usable_flag = sevendeadlysins_index[card_indexes[chosen_card_index]].hp_flag
+                        defense_usable_flag = sevendeadlysins_index[card_indexes[chosen_card_index]].dp_flag
+                        speed_usable_flag = sevendeadlysins_index[card_indexes[chosen_card_index]].sp_flag
+                        battle_IQ_usable_flag = sevendeadlysins_index[card_indexes[chosen_card_index]].iq_flag
+                    
                     if place_button_rect.collidepoint(event.pos) and attribute_flag == True:
                         place_card_flag_1 = True
-                        attribute_lock = True    
-                    
+                        attribute_lock = True
+                        if chosen_attribute_index == 1:
+                            sevendeadlysins_index[chosen_card_index].rank_flag = False
+                        if chosen_attribute_index == 2:
+                            sevendeadlysins_index[chosen_card_index].atk_flag = False
+                        if chosen_attribute_index == 3:
+                            sevendeadlysins_index[chosen_card_index].hp_flag = False
+                        if chosen_attribute_index == 4:
+                            sevendeadlysins_index[chosen_card_index].dp_flag = False
+                        if chosen_attribute_index == 5:
+                            sevendeadlysins_index[chosen_card_index].sp_flag = False
+                        if chosen_attribute_index == 6:
+                            sevendeadlysins_index[chosen_card_index].iq_flag = False
+
+                                
 
             if event.type == pygame.MOUSEBUTTONUP:
                 horizontal_indicator_flag = False
@@ -212,20 +249,26 @@ def game_p2(window_size , main_file_directory):
         health_power_rect_btn = pygame.draw.rect(gwindow_2, black_light, ((19, 244), (196 , 32)))
         defense_power_rect_btn = pygame.draw.rect(gwindow_2, black_light, ((19, 285), (196 , 32)))
 
-        attack_power_text = display_text(gwindow_2, "Attack Power", white, 36, 203, 29, "COLONNA")
-        health_power_text = display_text(gwindow_2, "Health Power", white, 36, 244, 29, "COLONNA")
-        defense_power_text = display_text(gwindow_2, "Defense Power", white, 27, 285, 29, "COLONNA")
+        if attack_usable_flag:
+            attack_power_text = display_text(gwindow_2, "Attack Power", white, 36, 203, 29, "COLONNA")
+        if health_usable_flag:    
+            health_power_text = display_text(gwindow_2, "Health Power", white, 36, 244, 29, "COLONNA")
+        if defense_usable_flag:
+            defense_power_text = display_text(gwindow_2, "Defense Power", white, 27, 285, 29, "COLONNA")
 
         rank_rect_btn = pygame.draw.rect(gwindow_2, black_light, ((551, 203), (196 , 32)))
         speed_power_rect_btn = pygame.draw.rect(gwindow_2, black_light, ((551, 244), (196 , 32)))
         battle_IQ_rect_btn = pygame.draw.rect(gwindow_2, black_light, ((551, 285), (196 , 32)))
 
-        rank_text = display_text(gwindow_2, "Rank", white, 616, 203, 29, "COLONNA")
-        speed_power_text = display_text(gwindow_2, "Speed Power", white, 573, 244, 29, "COLONNA")
-        battle_IQ_text = display_text(gwindow_2, "Battle IQ", white, 598, 285, 29, "COLONNA")
+        if rank_usable_flag:
+            rank_text = display_text(gwindow_2, "Rank", white, 616, 203, 29, "COLONNA")
+        if speed_usable_flag:
+            speed_power_text = display_text(gwindow_2, "Speed Power", white, 573, 244, 29, "COLONNA")
+        if battle_IQ_usable_flag:
+             battle_IQ_text = display_text(gwindow_2, "Battle IQ", white, 598, 285, 29, "COLONNA")
 
-        current_card_no_text_1 = display_text(gwindow_2, str(current_card_nos_1), white, 4, 155, 24, "OLDENGL")
-        current_card_no_text_2 = display_text(gwindow_2, str(current_card_nos_2), white, 730, 342, 24, "OLDENGL")
+        current_card_no_text_1 = display_text(gwindow_2, str(len(card_set_1)), white, 4, 155, 24, "OLDENGL")
+        current_card_no_text_2 = display_text(gwindow_2, str(len(card_set_2)), white, 730, 342, 24, "OLDENGL")
         press_ESC_text = display_text(gwindow_2, "press ESC to exit", white, 19.55, 14.44, 17, "AGENCYR")
         
         if mark_value_horizontal < 2:
@@ -245,8 +288,6 @@ def game_p2(window_size , main_file_directory):
             card_1_battle_IQ = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[0]].IQ), white, 923, 72+(40*2), 12, "OCRAEXT")
 
 
-
-
             card_2 = pygame.image.load(sevendeadlysins_index[card_indexes[1]].card_image).convert_alpha()
             card_2 = pygame.transform.scale(card_2, (104, 140))
             card_2_rect = card_2.get_rect(center = (98+(200*1), 456))
@@ -257,7 +298,7 @@ def game_p2(window_size , main_file_directory):
             card_2_defense = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[1]].DP), white, 923, 212+(32*0), 12, "OCRAEXT")
             card_2_speed = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[1]].SP), white, 923, 212+(32*1), 12, "OCRAEXT")
             card_2_battle_IQ = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[1]].IQ), white, 923, 212+(32*2), 12, "OCRAEXT")
-
+            
 
 
             card_3 = pygame.image.load(sevendeadlysins_index[card_indexes[2]].card_image).convert_alpha()
@@ -290,7 +331,6 @@ def game_p2(window_size , main_file_directory):
         gwindow_2.blit(card_3, card_3_rect)
         gwindow_2.blit(card_4, card_4_rect)
 
-        chosen_attribute_final = attributes_list[chosen_attribute_index]
         display_text(gwindow_2, chosen_attribute_final, black, 330, 335, 18, "OCRAEXT")
         pygame.display.update()
 game_p2(big_window_size, main_file_directory)
