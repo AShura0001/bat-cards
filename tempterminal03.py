@@ -1,10 +1,7 @@
-class testING:
-    def __init__(self, age):
-        self.name = "test"
-        self.age = age
+from sevendeadlysins import sevendeadlysins_index
 
-testING1 = testING(10)
-
-print(testING1.name, testING1.age)
-testING1.age = 20
-print(testING1.name, testING1.age)
+if int(sevendeadlysins_index[1].rank) < int(sevendeadlysins_index[2].rank):
+    print (int(sevendeadlysins_index[1].rank), int(sevendeadlysins_index[2].rank))
+    print("True")
+else:
+    print("False")

@@ -42,7 +42,9 @@ def game_p2(window_size , main_file_directory):
     card_holder_flag_2 = True
     place_card_flag_1 = False
     place_card_flag_2 = False
-    attribute_lock = False
+    attribute_lock_1 = False
+    attribute_lock_2 = False
+    turn_flag = True
     
 
     chosen_card_index = 0
@@ -82,7 +84,7 @@ def game_p2(window_size , main_file_directory):
     horizontal_scroll_bar_pos = 56
 
     card_placement_holder_1 = pygame.image.load(os.path.join(main_file_directory,"assets", "card_placement_holder.png")).convert_alpha()
-    card_placement_holder_1_rect = card_placement_holder_1.get_rect(center = (278, 250))
+    card_placement_holder_1_rect = card_placement_holder_1.get_rect(center = (278, 250))  
     
     card_placement_holder_2 = pygame.image.load(os.path.join(main_file_directory, "assets", "card_placement_holder.png")).convert_alpha()
     card_placement_holder_2_rect = card_placement_holder_2.get_rect(center = (487, 250))
@@ -121,6 +123,10 @@ def game_p2(window_size , main_file_directory):
 
     attributes_list = ["", "Rank", "Attack Power", "Health Power", "Defense Power", "Speed Power", "Battle IQ"]
     while event_flag:
+        
+
+        print(chosen_attribute_index)
+        print (card_holder_flag_1, card_holder_flag_2)
 
         if card_holder_flag_1:
             gwindow_2.blit(card_placement_holder_1, card_placement_holder_1_rect)
@@ -159,7 +165,7 @@ def game_p2(window_size , main_file_directory):
                     horizontal_scroll_bar_pos += 54
                     mark_value_horizontal = horizontal_bar_markings.index(horizontal_scroll_bar_pos)
                 
-                if not attribute_lock:
+                if not attribute_lock_1 and turn_flag:
                     if rank_rect_btn.collidepoint(event.pos):
                         chosen_attribute_index = 1
                         attribute_flag = True
@@ -198,16 +204,17 @@ def game_p2(window_size , main_file_directory):
                         chosen_card_index = 4
 
                     if not card_holder_flag_1:
-                        rank_usable_flag = sevendeadlysins_index[card_indexes[chosen_card_index]].rank_flag
-                        attack_usable_flag = sevendeadlysins_index[card_indexes[chosen_card_index]].atk_flag
-                        health_usable_flag = sevendeadlysins_index[card_indexes[chosen_card_index]].hp_flag
-                        defense_usable_flag = sevendeadlysins_index[card_indexes[chosen_card_index]].dp_flag
-                        speed_usable_flag = sevendeadlysins_index[card_indexes[chosen_card_index]].sp_flag
-                        battle_IQ_usable_flag = sevendeadlysins_index[card_indexes[chosen_card_index]].iq_flag
+                        rank_usable_flag = sevendeadlysins_index[card_indexes_2[chosen_card_index]].rank_flag
+                        attack_usable_flag = sevendeadlysins_index[card_indexes_2[chosen_card_index]].atk_flag
+                        health_usable_flag = sevendeadlysins_index[card_indexes_2[chosen_card_index]].hp_flag
+                        defense_usable_flag = sevendeadlysins_index[card_indexes_2[chosen_card_index]].dp_flag
+                        speed_usable_flag = sevendeadlysins_index[card_indexes_2[chosen_card_index]].sp_flag
+                        battle_IQ_usable_flag = sevendeadlysins_index[card_indexes_2[chosen_card_index]].iq_flag
                     
                     if place_button_rect.collidepoint(event.pos) and attribute_flag == True:
                         place_card_flag_1 = True
-                        attribute_lock = True
+                        attribute_lock_1 = True
+                        turn_flag = False
                         if chosen_attribute_index == 1:
                             sevendeadlysins_index[chosen_card_index].rank_flag = False
                         if chosen_attribute_index == 2:
@@ -272,66 +279,169 @@ def game_p2(window_size , main_file_directory):
         press_ESC_text = display_text(gwindow_2, "press ESC to exit", white, 19.55, 14.44, 17, "AGENCYR")
         
         if mark_value_horizontal < 2:
-            card_indexes = []
-            for i in range((mark_value_horizontal*4) , ((mark_value_horizontal+1)*4)): card_indexes.append(card_set_1[i])
+            card_indexes_2 = []
+            for i in range((mark_value_horizontal*4) , ((mark_value_horizontal+1)*5)): card_indexes_2.append(card_set_1[i])
             
             
-            card_1 = pygame.image.load(sevendeadlysins_index[card_indexes[0]].card_image).convert_alpha()
+            card_1 = pygame.image.load(sevendeadlysins_index[card_indexes_2[0]].card_image).convert_alpha()
             card_1 = pygame.transform.scale(card_1, (104, 140))
             card_1_rect = card_1.get_rect(center = (98+(200*0), 456))
-            card_1_name_info = display_text(gwindow_2, (sevendeadlysins_index[card_indexes[0]].name + " [{}]".format(sevendeadlysins_index[card_indexes[0]].form)), white, 760, 35, 12, "OCRAEXT")
-            card_1_rank = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[0]].rank), white, 830, 72+(40*0), 12, "OCRAEXT")
-            card_1_attack = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[0]].ATK), white, 820, 72+(40*1), 12, "OCRAEXT")
-            card_1_health = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[0]].HP), white, 820, 72+(40*2), 12, "OCRAEXT")
-            card_1_defense = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[0]].DP), white, 923, 72+(40*0), 12, "OCRAEXT")
-            card_1_speed = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[0]].SP), white, 923, 72+(40*1), 12, "OCRAEXT")
-            card_1_battle_IQ = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[0]].IQ), white, 923, 72+(40*2), 12, "OCRAEXT")
+            card_1_name_info = display_text(gwindow_2, (sevendeadlysins_index[card_indexes_2[0]].name + " [{}]".format(sevendeadlysins_index[card_indexes_2[0]].form)), white, 760, 35, 12, "OCRAEXT")
+            card_1_rank = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[0]].rank), white, 830, 72+(40*0), 12, "OCRAEXT")
+            card_1_attack = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[0]].ATK), white, 820, 72+(40*1), 12, "OCRAEXT")
+            card_1_health = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[0]].HP), white, 820, 72+(40*2), 12, "OCRAEXT")
+            card_1_defense = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[0]].DP), white, 923, 72+(40*0), 12, "OCRAEXT")
+            card_1_speed = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[0]].SP), white, 923, 72+(40*1), 12, "OCRAEXT")
+            card_1_battle_IQ = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[0]].IQ), white, 923, 72+(40*2), 12, "OCRAEXT")
 
 
-            card_2 = pygame.image.load(sevendeadlysins_index[card_indexes[1]].card_image).convert_alpha()
+            card_2 = pygame.image.load(sevendeadlysins_index[card_indexes_2[1]].card_image).convert_alpha()
             card_2 = pygame.transform.scale(card_2, (104, 140))
             card_2_rect = card_2.get_rect(center = (98+(200*1), 456))
-            card_2_name_info = display_text(gwindow_2, (sevendeadlysins_index[card_indexes[1]].name + " [{}]".format(sevendeadlysins_index[card_indexes[1]].form)), white, 760, 182, 12, "OCRAEXT")
-            card_2_rank = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[1]].rank), white, 830, 212+(32*0), 12, "OCRAEXT")
-            card_2_attack = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[1]].ATK), white, 820, 212+(32*1), 12, "OCRAEXT")
-            card_2_health = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[1]].HP), white, 820, 212+(32*2), 12, "OCRAEXT")
-            card_2_defense = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[1]].DP), white, 923, 212+(32*0), 12, "OCRAEXT")
-            card_2_speed = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[1]].SP), white, 923, 212+(32*1), 12, "OCRAEXT")
-            card_2_battle_IQ = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[1]].IQ), white, 923, 212+(32*2), 12, "OCRAEXT")
+            card_2_name_info = display_text(gwindow_2, (sevendeadlysins_index[card_indexes_2[1]].name + " [{}]".format(sevendeadlysins_index[card_indexes_2[1]].form)), white, 760, 182, 12, "OCRAEXT")
+            card_2_rank = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[1]].rank), white, 830, 212+(32*0), 12, "OCRAEXT")
+            card_2_attack = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[1]].ATK), white, 820, 212+(32*1), 12, "OCRAEXT")
+            card_2_health = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[1]].HP), white, 820, 212+(32*2), 12, "OCRAEXT")
+            card_2_defense = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[1]].DP), white, 923, 212+(32*0), 12, "OCRAEXT")
+            card_2_speed = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[1]].SP), white, 923, 212+(32*1), 12, "OCRAEXT")
+            card_2_battle_IQ = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[1]].IQ), white, 923, 212+(32*2), 12, "OCRAEXT")
             
 
 
-            card_3 = pygame.image.load(sevendeadlysins_index[card_indexes[2]].card_image).convert_alpha()
+            card_3 = pygame.image.load(sevendeadlysins_index[card_indexes_2[2]].card_image).convert_alpha()
             card_3 = pygame.transform.scale(card_3, (104, 140))
             card_3_rect = card_1.get_rect(center = (98+(200*2), 456))
-            card_3_name_info = display_text(gwindow_2, (sevendeadlysins_index[card_indexes[2]].name + " [{}]".format(sevendeadlysins_index[card_indexes[2]].form)), white, 760, 305, 12, "OCRAEXT")
-            card_3_rank = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[2]].rank), white, 830, 332+(32*0), 12, "OCRAEXT")
-            card_3_attack = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[2]].ATK), white, 820, 332+(32*1), 12, "OCRAEXT")
-            card_3_health = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[2]].HP), white, 820, 332+(32*2), 12, "OCRAEXT")
-            card_3_defense = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[2]].DP), white, 923, 332+(32*0), 12, "OCRAEXT")
-            card_3_speed = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[2]].SP), white, 923, 332+(32*1), 12, "OCRAEXT")
-            card_3_battle_IQ = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[2]].IQ), white, 923, 332+(32*2), 12, "OCRAEXT")
+            card_3_name_info = display_text(gwindow_2, (sevendeadlysins_index[card_indexes_2[2]].name + " [{}]".format(sevendeadlysins_index[card_indexes_2[2]].form)), white, 760, 305, 12, "OCRAEXT")
+            card_3_rank = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[2]].rank), white, 830, 332+(32*0), 12, "OCRAEXT")
+            card_3_attack = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[2]].ATK), white, 820, 332+(32*1), 12, "OCRAEXT")
+            card_3_health = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[2]].HP), white, 820, 332+(32*2), 12, "OCRAEXT")
+            card_3_defense = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[2]].DP), white, 923, 332+(32*0), 12, "OCRAEXT")
+            card_3_speed = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[2]].SP), white, 923, 332+(32*1), 12, "OCRAEXT")
+            card_3_battle_IQ = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[2]].IQ), white, 923, 332+(32*2), 12, "OCRAEXT")
 
 
 
-            card_4 = pygame.image.load(sevendeadlysins_index[card_indexes[3]].card_image).convert_alpha()
+            card_4 = pygame.image.load(sevendeadlysins_index[card_indexes_2[3]].card_image).convert_alpha()
             card_4 = pygame.transform.scale(card_4, (104, 140))
             card_4_rect = card_1.get_rect(center = (98+(200*3), 456))
-            card_4_name_info = display_text(gwindow_2, (sevendeadlysins_index[card_indexes[3]].name + " [{}]".format(sevendeadlysins_index[card_indexes[3]].form)), white, 760, 424, 12, "OCRAEXT")
-            card_4_rank = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[3]].rank), white, 830, 450+(32*0), 12, "OCRAEXT")
-            card_4_attack = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[3]].ATK), white, 820, 450+(32*1), 12, "OCRAEXT")
-            card_4_health = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[3]].HP), white, 820, 450+(32*2), 12, "OCRAEXT")
-            card_4_defense = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[3]].DP), white, 923, 450+(32*0), 12, "OCRAEXT")
-            card_4_speed = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[3]].SP), white, 923, 450+(32*1), 12, "OCRAEXT")
-            card_4_battle_IQ = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes[3]].IQ), white, 923, 450+(32*2), 12, "OCRAEXT")
+            card_4_name_info = display_text(gwindow_2, (sevendeadlysins_index[card_indexes_2[3]].name + " [{}]".format(sevendeadlysins_index[card_indexes_2[3]].form)), white, 760, 424, 12, "OCRAEXT")
+            card_4_rank = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[3]].rank), white, 830, 450+(32*0), 12, "OCRAEXT")
+            card_4_attack = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[3]].ATK), white, 820, 450+(32*1), 12, "OCRAEXT")
+            card_4_health = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[3]].HP), white, 820, 450+(32*2), 12, "OCRAEXT")
+            card_4_defense = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[3]].DP), white, 923, 450+(32*0), 12, "OCRAEXT")
+            card_4_speed = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[3]].SP), white, 923, 450+(32*1), 12, "OCRAEXT")
+            card_4_battle_IQ = display_text(gwindow_2, str(sevendeadlysins_index[card_indexes_2[3]].IQ), white, 923, 450+(32*2), 12, "OCRAEXT")
 
         
         gwindow_2.blit(card_1, card_1_rect)
         gwindow_2.blit(card_2, card_2_rect)
         gwindow_2.blit(card_3, card_3_rect)
         gwindow_2.blit(card_4, card_4_rect)
-
+        
         display_text(gwindow_2, chosen_attribute_final, black, 330, 335, 18, "OCRAEXT")
+        
+
+        if not turn_flag and not attribute_lock_2:
+            available_attribute_values = []
+            for cpu_cards in card_set_2: 
+                if chosen_attribute_index == 1:
+                    available_attribute_values.append(sevendeadlysins_index[cpu_cards].rank)
+                if chosen_attribute_index == 2:
+                    available_attribute_values.append(sevendeadlysins_index[cpu_cards].ATK)
+                if chosen_attribute_index == 3:
+                    available_attribute_values.append(sevendeadlysins_index[cpu_cards].HP)
+                if chosen_attribute_index == 4:
+                    available_attribute_values.append(sevendeadlysins_index[cpu_cards].DP)
+                if chosen_attribute_index == 5:
+                    available_attribute_values.append(sevendeadlysins_index[cpu_cards].SP)
+                if chosen_attribute_index == 6:
+                    available_attribute_values.append(sevendeadlysins_index[cpu_cards].IQ)
+
+            if chosen_attribute_index == 1:
+                chosen_card_index_cpu = available_attribute_values.index(min(available_attribute_values))
+            elif chosen_attribute_index in range (2, 7):
+                chosen_card_index_cpu = available_attribute_values.index(max(available_attribute_values))
+
+            card_holder_flag_2 = False
+            attribute_lock_2 = True
+            chosen_cpu_card_image = pygame.image.load(sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].card_image).convert_alpha()
+            chosen_cpu_card_image = pygame.transform.scale(chosen_cpu_card_image, (104, 140))
+
+        if attribute_lock_2:
+            gwindow_2.blit(chosen_cpu_card_image, card_placement_holder_2_rect)     
+        
+        if attribute_lock_2 and attribute_lock_1:
+            time.sleep(1)
+            if chosen_attribute_index == 1:
+                if int(sevendeadlysins_index[card_indexes_2[chosen_card_index]].rank) < int(sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].rank):
+                    card_set_1.append(card_set_2[chosen_card_index_cpu])
+                    card_set_2.remove(card_set_2[chosen_card_index_cpu])
+                    print("Player 1 wins this card")
+                    card_holder_flag_1 = True
+                    card_holder_flag_2 = True
+                elif int(sevendeadlysins_index[card_indexes_2[chosen_card_index]].rank) < int(sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].rank): 
+                    card_set_2.append(card_set_1[chosen_card_index])
+                    card_set_1.remove(card_set_1[chosen_card_index])
+                    print("Player 2 wins this card")
+                    pygame.draw.rect(gwindow_2, black, ((104, 140),(174, 110) ))
+                    pygame.draw.rect(gwindow_2, black, ((104, 140),(183, 110) ))
+                    card_holder_flag_1 = True
+                    card_holder_flag_2 = True
+            if chosen_attribute_index in range (2, 7):
+                if sevendeadlysins_index[card_indexes_2[chosen_card_index]].ATK > sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].ATK:
+                    card_set_2.append(card_set_1[chosen_card_index_cpu])
+                    card_set_1.remove(card_set_1[chosen_card_index_cpu])
+                    print("Player 1 wins this card")
+                    pygame.draw.rect(gwindow_2, black, ((104, 140),(174, 110) ))
+                    pygame.draw.rect(gwindow_2, black, ((104, 140),(183, 110) ))
+                    card_holder_flag_1 = True
+                    card_holder_flag_2 = True
+                elif sevendeadlysins_index[card_indexes_2[chosen_card_index]].ATK > sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].ATK: 
+                    card_set_1.append(card_set_2[chosen_card_index_cpu])
+                    card_set_2.remove(card_set_2[chosen_card_index_cpu])
+                    print("Player 2 wins this card")
+                    pygame.draw.rect(gwindow_2, black, ((104, 140),(174, 110) ))
+                    pygame.draw.rect(gwindow_2, black, ((104, 140),(183, 110) ))
+                    card_holder_flag_1 = True
+                    card_holder_flag_2 = True
+
+            
+            
+            if not turn_flag:
+                chosen_attribute_index = random.randint(1, 7)
+                chosen_attribute_final = attributes_list[chosen_attribute_index]
+                display_text(gwindow_2, chosen_attribute_final, black, 330, 335, 18, "OCRAEXT")
+                available_attribute_values = []
+                available_attribute_values.clear()
+                for cpu_cards in card_set_2: 
+                    if chosen_attribute_index == 1:
+                        available_attribute_values.append(sevendeadlysins_index[cpu_cards].rank)
+                    if chosen_attribute_index == 2:
+                        available_attribute_values.append(sevendeadlysins_index[cpu_cards].ATK)
+                    if chosen_attribute_index == 3:
+                        available_attribute_values.append(sevendeadlysins_index[cpu_cards].HP)
+                    if chosen_attribute_index == 4:
+                        available_attribute_values.append(sevendeadlysins_index[cpu_cards].DP)
+                    if chosen_attribute_index == 5:
+                        available_attribute_values.append(sevendeadlysins_index[cpu_cards].SP)
+                    if chosen_attribute_index == 6:
+                        available_attribute_values.append(sevendeadlysins_index[cpu_cards].IQ)
+                
+                if chosen_attribute_index == 1:
+                    chosen_card_index_cpu = available_attribute_values.index(min(available_attribute_values))
+                elif chosen_attribute_index in range (2, 7):
+                    chosen_card_index_cpu = available_attribute_values.index(max(available_attribute_values))
+
+
+                time.sleep(2)
+                card_holder_flag_2 = False
+                attribute_lock_2 = False
+                attribute_lock_1 = False
+                turn_flag = True
+                chosen_cpu_card_image = pygame.image.load(sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].card_image).convert_alpha()
+                chosen_cpu_card_image = pygame.transform.scale(chosen_cpu_card_image, (104, 140))
+
+    
         pygame.display.update()
 game_p2(big_window_size, main_file_directory)
 pygame.quit()
