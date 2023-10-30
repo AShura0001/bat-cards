@@ -1,2 +1,2 @@
 
-        #     print(attributes_list[chosen_attribute_index])
+                card_lock_1 = False
