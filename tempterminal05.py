@@ -35,6 +35,7 @@ def game_p2(window_size , main_file_directory):
     gwindow_2 = pygame.display.set_mode(window_size)
     gwindow_2.fill(black)
     event_flag = True
+    event_flag_2 = False
 
 
     current_turn = True
@@ -67,13 +68,13 @@ def game_p2(window_size , main_file_directory):
     card_won_set_1 = []
     card_won_set_2 = []
 
-    while (len(card_set_1) < 8) :
-        card_rank_a = random.randint(1, 16)
+    while (len(card_set_1) < 26) :
+        card_rank_a = random.randint(1, 52)
         if (card_rank_a not in card_set_1):
             card_set_1.append(card_rank_a)
 
-    while (len(card_set_2) < 8) :
-        card_rank_b = random.randint(1, 16)
+    while (len(card_set_2) < 26) :
+        card_rank_b = random.randint(1, 52)
         if (card_rank_b not in card_set_1) and (card_rank_b not in card_set_2):
             card_set_2.append(card_rank_b)
 
@@ -121,9 +122,6 @@ def game_p2(window_size , main_file_directory):
     place_button_rect = place_button.get_rect(center = (385, 263))
 
     opponent_card_back = pygame.image.load(os.path.join(main_file_directory, "assets", "opponent_card_back.png")).convert_alpha()
-    for i in range (0, 6):
-        opponent_card_back_rect = opponent_card_back.get_rect(center = (70+(i*120), 84))
-        gwindow_2.blit(opponent_card_back, opponent_card_back_rect)
 
     horizontal_bar_markings = [(56 + (54*i)) for i in range(0, 13)]
     
@@ -132,8 +130,12 @@ def game_p2(window_size , main_file_directory):
 
     attributes_list = ["", "Rank", "ATK", "HP", "DP", "SP", "IQ"]
     while event_flag:
-        
+        for i in range (0, 6):
+            opponent_card_back_rect = opponent_card_back.get_rect(center = (70+(i*120), 84))
+            gwindow_2.blit(opponent_card_back, opponent_card_back_rect)
+
         if len(card_set_1)>0 and len(card_set_2)>0:
+
             gwindow_2.blit(attribute_values_bg, attribute_values_bg_rect)
             if card_holder_flag_1:
                 gwindow_2.blit(card_placement_holder_1, card_placement_holder_1_rect)
@@ -164,6 +166,7 @@ def game_p2(window_size , main_file_directory):
                         event_flag = False
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    # print(event.pos)
                     if scroll_bar_horizontal_rect.collidepoint(event.pos):
                         horizontal_indicator_flag = True
                     if horizontal_end_left_rect.collidepoint(event.pos) and horizontal_scroll_bar_pos > 56:
@@ -180,7 +183,7 @@ def game_p2(window_size , main_file_directory):
                         pygame.draw.rect(gwindow_2, black, ((0, 379), (757 , 159)))
                         card_holder_flag_1 = True
                         card_indexes_2.clear()
-
+                    
                     if not card_lock_1 and turn_flag:
                             
                         if not attribute_lock_1 and current_turn:
@@ -258,7 +261,7 @@ def game_p2(window_size , main_file_directory):
 
                         
                         if place_button_rect.collidepoint(event.pos) and attribute_flag and current_turn and attribute_check:
-                            print("w2")
+                            # print("w2")
                             place_card_flag_1 = True
                             attribute_flag = True
                             
@@ -282,7 +285,7 @@ def game_p2(window_size , main_file_directory):
                         if place_button_rect.collidepoint(event.pos) and attribute_flag and not current_turn and attribute_check :
                             place_card_flag_1 = True
                             attribute_flag = True
-                            print("w1")                        
+                            # print("w1")                        
                             if chosen_attribute_index == 1:
                                 sevendeadlysins_index[card_indexes_2[chosen_card_index]].rank_flag = False
                             if chosen_attribute_index == 2:
@@ -303,9 +306,61 @@ def game_p2(window_size , main_file_directory):
                             
 
                         if place_button_rect.collidepoint(event.pos) and not attribute_check:
-                            print("Attribute not usable")
+                            # print("Attribute not usable")
                             display_text(gwindow_2, "Attribute not usable", uni_red, 385, 263, 12, "OCRAEXT")
                             
+                    if show_whole_deck_rect.collidepoint(event.pos):
+                        event_flag_2 = True
+                        m = 1
+                        screen = pygame.display.set_mode([640, 480])
+                        while event_flag_2:
+                            screen.fill(black)
+                            for event_2 in pygame.event.get():
+                                if event_2.type == pygame.QUIT:
+                                    event_flag_2 = False
+                                    pygame.draw.rect(screen, black, ((0, 0), (640, 480)))
+                                    time.sleep(0.1)
+                                    gwindow_2 = pygame.display.set_mode([960, 560])
+                                elif event_2.type == pygame.KEYDOWN:
+                                    if event_2.key == pygame.K_ESCAPE:
+                                        event_flag_2 = False
+                                        pygame.draw.rect(screen, black, ((0, 0), (640, 480)))
+                                        time.sleep(0.1)
+                                        gwindow_2 = pygame.display.set_mode([960, 560])
+                                elif event_2.type == pygame.MOUSEBUTTONDOWN:
+                                    # print(event_2.pos)
+                                    if back_rect.collidepoint(event_2.pos) and m>1:
+                                        m -= 1
+                                    elif next_rect.collidepoint(event_2.pos) and m<52:
+                                        m += 1
+                            if event_flag_2:
+                                back_rect = pygame.draw.rect(screen, white, ((180, 390), (80, 40)))
+                                back_text = display_text(screen, 'Back', black, 200, 400, 20, "AGENCYR")
+                                next_rect = pygame.draw.rect(screen, white, ((400, 390), (80, 40)))
+                                next_text = display_text(screen, 'Next', black, 425, 400, 20, "AGENCYR")
+                                image = pygame.image.load(sevendeadlysins_index[m].card_image).convert_alpha()
+                                name = sevendeadlysins_index[m].name
+                                title = sevendeadlysins_index[m].title
+                                form = sevendeadlysins_index[m].form
+                                rank = sevendeadlysins_index[m].rank
+                                atk = sevendeadlysins_index[m].ATK
+                                hp = sevendeadlysins_index[m].HP
+                                dp = sevendeadlysins_index[m].DP
+                                sp = sevendeadlysins_index[m].SP
+                                iq = sevendeadlysins_index[m].IQ
+
+                                display_text(screen, (name+' - '+form), white, 215, 200, 20, "ARLRDBD")
+                                display_text(screen, ("["+title+"]"), white, 215, 221, 12, "ARLRDBD")
+                                display_text(screen, "rank: {}".format(rank), white, 200, 270, 15, "OCRAEXT")
+                                display_text(screen, "ATK: {}".format(atk), white, 200, 305, 15, "OCRAEXT")
+                                display_text(screen, "HP: {}".format(hp), white, 200, 340, 15, "OCRAEXT")
+                                display_text(screen, "DP: {}".format(dp), white, 380, 270, 15, "OCRAEXT")
+                                display_text(screen, "SP: {}".format(sp), white, 380, 305, 15, "OCRAEXT")
+                                display_text(screen, "IQ: {}".format(iq), white, 380, 340, 15, "OCRAEXT")
+                                image = pygame.transform.scale(image, (104, 150))
+                                screen.blit(image, [280, 50])
+                            pygame.display.flip()
+                            time.sleep(0.1)
                                     
 
                 if event.type == pygame.MOUSEBUTTONUP:
@@ -440,7 +495,7 @@ def game_p2(window_size , main_file_directory):
                 available_attribute_values = []
                 for cpu_cards in card_set_2: 
                     if chosen_attribute_index == 1:
-                        available_attribute_values.append(sevendeadlysins_index[cpu_cards].rank)
+                        available_attribute_values.append(int(sevendeadlysins_index[cpu_cards].rank))
                     if chosen_attribute_index == 2:
                         available_attribute_values.append(sevendeadlysins_index[cpu_cards].ATK)
                     if chosen_attribute_index == 3:
@@ -473,11 +528,11 @@ def game_p2(window_size , main_file_directory):
                         # print(sevendeadlysins_index[card_indexes_2[chosen_card_index-1]].rank, sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].rank)
                         card_won_set_1.append(card_set_2[chosen_card_index_cpu])
                         card_won_set_1.append(card_indexes_2[chosen_card_index])
-                        print (sevendeadlysins_index[card_indexes_2[chosen_card_index]].name)
-                        print (sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].name)
+                        # print (sevendeadlysins_index[card_indexes_2[chosen_card_index]].name)
+                        # print (sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].name)
                         card_set_1.remove(card_indexes_2[chosen_card_index])
                         card_set_2.remove(card_set_2[chosen_card_index_cpu])
-                        print("Player 1 wins this card")
+                        # print("Player 1 wins this card")
                         pygame.draw.rect(gwindow_2, black, ((104, 140),(231, 181) ))
                         pygame.draw.rect(gwindow_2, black, ((104, 140),(435, 181) ))
                         card_holder_flag_1 = True
@@ -487,28 +542,28 @@ def game_p2(window_size , main_file_directory):
                         # print(sevendeadlysins_index[card_indexes_2[chosen_card_index-1]].rank, sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].rank)
                         card_won_set_2.append(card_indexes_2[chosen_card_index])
                         card_won_set_2.append(card_set_2[chosen_card_index_cpu])
-                        print (sevendeadlysins_index[card_indexes_2[chosen_card_index]].name)
-                        print (sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].name)
+                        # print (sevendeadlysins_index[card_indexes_2[chosen_card_index]].name)
+                        # print (sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].name)
                         card_set_1.remove(card_indexes_2[chosen_card_index])
                         card_set_2.remove(card_set_2[chosen_card_index_cpu])
-                        print("Player 2 wins this card")
+                        # print("Player 2 wins this card")
                         pygame.draw.rect(gwindow_2, black, ((104, 140),(231, 181) ))
                         pygame.draw.rect(gwindow_2, black, ((104, 140),(435, 181) ))
                         card_holder_flag_1 = True
                         card_holder_flag_2 = True
                         card_lock_1 = False
                 if chosen_attribute_index in range (2, 7):
-                    print(len(card_indexes_2))
-                    print(chosen_card_index)
+                    # print(len(card_indexes_2))
+                    # print(chosen_card_index)
                     if sevendeadlysins_index[card_indexes_2[chosen_card_index]].ATK > sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].ATK:
                         # print(sevendeadlysins_index[card_indexes_2[chosen_card_index-1]].ATK, sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].ATK)
                         card_won_set_1.append(card_set_2[chosen_card_index_cpu])
                         card_won_set_1.append(card_indexes_2[chosen_card_index])
-                        print (sevendeadlysins_index[card_indexes_2[chosen_card_index]].name)
-                        print (sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].name)
+                        # print (sevendeadlysins_index[card_indexes_2[chosen_card_index]].name)
+                        # print (sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].name)
                         card_set_1.remove(card_indexes_2[chosen_card_index])
                         card_set_2.remove(card_set_2[chosen_card_index_cpu])
-                        print("Player 1 wins this card")
+                        # print("Player 1 wins this card")
                         pygame.draw.rect(gwindow_2, black, ((104, 140),(231, 181) ))
                         pygame.draw.rect(gwindow_2, black, ((104, 140),(435, 181) ))
                         card_holder_flag_1 = True
@@ -518,11 +573,11 @@ def game_p2(window_size , main_file_directory):
                         # print(sevendeadlysins_index[card_indexes_2[chosen_card_index-1]].ATK, sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].ATK)
                         card_won_set_2.append(card_indexes_2[chosen_card_index])
                         card_won_set_2.append(card_set_2[chosen_card_index_cpu])
-                        print (sevendeadlysins_index[card_indexes_2[chosen_card_index]].name)
-                        print (sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].name)
+                        # print (sevendeadlysins_index[card_indexes_2[chosen_card_index]].name)
+                        # print (sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].name)
                         card_set_1.remove(card_indexes_2[chosen_card_index])
                         card_set_2.remove(card_set_2[chosen_card_index_cpu])
-                        print("Player 2 wins this card")
+                        # print("Player 2 wins this card")
                         pygame.draw.rect(gwindow_2, black, ((104, 140),(231, 181) ))
                         pygame.draw.rect(gwindow_2, black, ((104, 140),(435, 181) ))
                         card_holder_flag_1 = True
@@ -538,7 +593,7 @@ def game_p2(window_size , main_file_directory):
                     available_attribute_values.clear()
                     for cpu_cards in card_set_2: 
                         if chosen_attribute_index == 1:
-                            available_attribute_values.append(sevendeadlysins_index[cpu_cards].rank)
+                            available_attribute_values.append(int(sevendeadlysins_index[cpu_cards].rank))
                         if chosen_attribute_index == 2:
                             available_attribute_values.append(sevendeadlysins_index[cpu_cards].ATK)
                         if chosen_attribute_index == 3:
@@ -550,21 +605,75 @@ def game_p2(window_size , main_file_directory):
                         if chosen_attribute_index == 6:
                             available_attribute_values.append(sevendeadlysins_index[cpu_cards].IQ)
                     
-                    if chosen_attribute_index == 1:
-                        chosen_card_index_cpu = available_attribute_values.index(min(available_attribute_values))
-                        chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].rank
-                    elif chosen_attribute_index in range (2, 7):
-                        chosen_card_index_cpu = available_attribute_values.index(max(available_attribute_values))
-                        if chosen_attribute_index == 2:
-                            chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].ATK
-                        if chosen_attribute_index == 3:
-                            chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].HP
-                        if chosen_attribute_index == 4:
-                            chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].DP
-                        if chosen_attribute_index == 5:
-                            chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].SP
-                        if chosen_attribute_index == 6:
-                            chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].IQ
+                    choice_luck = random.randint(1, 100)
+                    if choice_luck == 11 or choice_luck == 8:
+                        if chosen_attribute_index == 1:
+                            non_choosing_card_index_cpu = available_attribute_values.index(min(available_attribute_values))
+                            card_set_2.remove(card_set_2[non_choosing_card_index_cpu])
+                            for cpu_cards in card_set_2:
+                                available_attribute_values.append(int(sevendeadlysins_index[cpu_cards].rank))
+                            chosen_card_index_cpu = random.randint(1, len(available_attribute_values))
+                            chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].rank
+                        
+                        elif chosen_attribute_index in range (2, 7):
+                            non_choosing_card_index_cpu = available_attribute_values.index(max(available_attribute_values))
+                            card_set_2.remove(card_set_2[non_choosing_card_index_cpu])
+                            for cpu_cards in card_set_2:
+                                if chosen_attribute_index == 2:
+                                    available_attribute_values.append(sevendeadlysins_index[cpu_cards].ATK)
+                                if chosen_attribute_index == 3:
+                                    available_attribute_values.append(sevendeadlysins_index[cpu_cards].HP)
+                                if chosen_attribute_index == 4:
+                                    available_attribute_values.append(sevendeadlysins_index[cpu_cards].DP)
+                                if chosen_attribute_index == 5:
+                                    available_attribute_values.append(sevendeadlysins_index[cpu_cards].SP)
+                                if chosen_attribute_index == 6:
+                                    available_attribute_values.append(sevendeadlysins_index[cpu_cards].IQ)
+                            chosen_card_index_cpu = random.randint(1, len(available_attribute_values))
+                            if chosen_attribute_index == 2:
+                                chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].ATK
+                            if chosen_attribute_index == 3:
+                                chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].HP
+                            if chosen_attribute_index == 4:
+                                chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].DP
+                            if chosen_attribute_index == 5:
+                                chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].SP
+                            if chosen_attribute_index == 6:
+                                chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].IQ
+                    
+                    elif choice_luck%2 == 0:
+                        if chosen_attribute_index == 1:
+                            chosen_card_index_cpu = random.randint(1, len(available_attribute_values))
+                            chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].rank
+                        elif chosen_attribute_index in range (2, 7):
+                            chosen_card_index_cpu = random.randint(1, len(available_attribute_values))
+                            if chosen_attribute_index == 2:
+                                chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].ATK
+                            if chosen_attribute_index == 3:
+                                chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].HP
+                            if chosen_attribute_index == 4:
+                                chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].DP
+                            if chosen_attribute_index == 5:
+                                chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].SP
+                            if chosen_attribute_index == 6:
+                                chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].IQ
+
+                    else:
+                        if chosen_attribute_index == 1:
+                            chosen_card_index_cpu = available_attribute_values.index(min(available_attribute_values))
+                            chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].rank
+                        elif chosen_attribute_index in range (2, 7):
+                            chosen_card_index_cpu = available_attribute_values.index(max(available_attribute_values))
+                            if chosen_attribute_index == 2:
+                                chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].ATK
+                            if chosen_attribute_index == 3:
+                                chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].HP
+                            if chosen_attribute_index == 4:
+                                chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].DP
+                            if chosen_attribute_index == 5:
+                                chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].SP
+                            if chosen_attribute_index == 6:
+                                chosen_attribute_final_value_cpu = sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].IQ
 
 
                     time.sleep(2)
@@ -574,14 +683,19 @@ def game_p2(window_size , main_file_directory):
                     attribute_lock_1 = True
                     turn_flag = True
                     current_turn = False
-                    print (sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].name)
+                    # print (sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].name)
                     chosen_cpu_card_image = pygame.image.load(sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].card_image).convert_alpha()
                     chosen_cpu_card_image = pygame.transform.scale(chosen_cpu_card_image, (104, 140))
                     card_lock_2 = True
-
+            show_whole_deck_rect = pygame.draw.rect(gwindow_2, black_light, ((760, 540), (195, 20)))
+            display_text(gwindow_2, "Show whole deck", white, 780, 540, 17, "OCRAEXT")
         else:
             gwindow_2.fill(black)
             display_text(gwindow_2, "GAME OVER", white, 300, 200, 50, "COLONNA")
+            if (len(card_won_set_1) + len(card_set_1)) > (len(card_won_set_2) + len(card_set_2)):
+                display_text(gwindow_2, "Player 1 wins", white, 300, 300, 50, "COLONNA")
+            elif (len(card_won_set_1) + len(card_set_1)) < (len(card_won_set_2) + len(card_set_2)):
+                display_text(gwindow_2, "Player 2 wins", white, 300, 300, 50, "COLONNA")
             for event in pygame.event.get():
 
                 if event.type == pygame.QUIT:
@@ -592,6 +706,6 @@ def game_p2(window_size , main_file_directory):
                         event_flag = False
 
     
-        pygame.display.update()
+        pygame.display.flip()
 game_p2(big_window_size, main_file_directory)
 pygame.quit()

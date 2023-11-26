@@ -1,2 +1,2 @@
-
-                card_lock_1 = False
+e
+                chosen_cpu_card_ima

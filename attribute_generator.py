@@ -1,6 +1,7 @@
 import random
 
 f = open("attribute values.txt", "a+")
+
 content = f.read()
 attribute_vals_stored = content.split(", ")
 m = []
