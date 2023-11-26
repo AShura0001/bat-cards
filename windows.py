@@ -83,7 +83,11 @@ def dashboard_window(window_size, main_file_directory, user_id_text_stored, user
             Play_flag = False
             mode_selector(window_size, main_file_directory, user_id_text_stored, user_password_text_stored)
             break
-
+        
+        if Inventory_flag:
+            Inventory_flag = False
+            inventory(window_size, main_file_directory, user_id_text_stored, user_password_text_stored)
+            break
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 event_flag = False
@@ -173,6 +177,52 @@ def dashboard_window(window_size, main_file_directory, user_id_text_stored, user
         Logs_btn_text = display_text(dashboard_window, "Logs", black, 550, 390, 28, "ARLRDBD")
         
         # print(Play_flag, Inventory_flag, Shop_flag, Guide_flag, Setting_flag, Logs_flag)
+        pygame.display.update()
+
+def inventory(window_size, main_file_directory, user_id_text_stored, user_password_text_stored):
+    inventory_window = pygame.display.set_mode(window_size)
+    pygame.display.set_caption("Inventory")
+    inventory_window.fill(black)
+    event_flag = True
+    dashboard_flag = False
+
+    while event_flag:
+        if dashboard_flag:
+            event_flag = False
+            dashboard_window(window_size, main_file_directory, user_id_text_stored, user_password_text_stored)
+            break
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                event_flag = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    event_flag = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                print (event.pos)
+                if dashboard_menu_btn.collidepoint(event.pos):
+                    dashboard_flag = True
+
+        user_info = open(os.path.join(main_file_directory, "users", "{0}.batdata".format(user_id_text_stored)), "a+")
+        user_info.seek(0)
+        user_data_packets = user_info.readlines()
+        data_set = []
+        for packet in user_data_packets:
+            data = packet.split(" = ")
+            data_set.append(data[1].strip())
+
+
+
+        pygame.draw.rect(inventory_window, white, [0, 0, window_size[0], window_size[1]], 5)
+        dashboard_menu_btn = pygame.draw.rect(inventory_window, white, [380, 435, 200, 100])
+        display_text(inventory_window, "Dashboard", black, 400, 465, 32, "OCRAEXT")
+        press_ESC_text = display_text(inventory_window, "press ESC to exit", white, 19.55, 14.44, 17, "AGENCYR")
+        display_text(inventory_window, "Inventory", white, (window_size[1]//2) + 50, 10, 70, "ARLRDBD")
+        display_text (inventory_window, "User: {}".format(data_set[0].strip()), white, (window_size[1]//2) + 150, 90, 18, "OCRAEXT")
+        WINS = display_text(inventory_window, "WINS", white, 90, 200, 90, "ARLRDBD")
+        display_text(inventory_window, str(data_set[2].strip()), white, 180, 300, 60, "ARLRDBD")
+        LOSSES = display_text(inventory_window, "LOSSES", white, 520, 200, 90, "ARLRDBD")
+        display_text(inventory_window, str(data_set[3].strip()), white, 700, 300, 60, "ARLRDBD")
+
         pygame.display.update()
 
 def mode_selector(window_size, main_file_directory, user_id_text_stored, user_password_text_stored):
@@ -1006,7 +1056,11 @@ def game_p2(window_size , main_file_directory, user_id_text_stored, user_passwor
     if win:
         user_data_packets[2] = "wins = {}\n".format(int(data_set[2])+1)
     elif loss:
-        user_data_packets[3] = "losses = {}\n".format(int(data_set[3])+1)
+        user_data_packets[3] = "losses = {}".format(int(data_set[3])+1)
+    
+    user_info.truncate(0)
+    user_info.seek(0)
+    user_info.writelines(user_data_packets)
     user_info.close()
 
 def login_page(big_window_size, small_window_size, main_file_directory):
@@ -1147,23 +1201,19 @@ def login_page(big_window_size, small_window_size, main_file_directory):
             if user_passowrd_text_rect.width > 434:
                 user_password_text = user_password_text[1:]
         
-        if submit_flag:
+        if submit_flag and len(user_id_text_stored)>0 and len(user_password_text_stored)>0:
             user_info = open(os.path.join(main_file_directory, "users", "{0}.batdata".format(user_id_text_stored)), "a+")
             user_info.seek(0)
             content = user_info.read()
             if len(content) == 0:
-                user_info.write("username = ")
-                user_info.write(str(user_id_text_stored))
-                user_info.write("\n")
-                user_info.write("password = ")
-                user_info.write(str(user_password_text_stored))
-                user_info.write("\n")
+                user_info.write("username = "+ str(user_id_text_stored) + "\n")
+                user_info.write("password = " + str(user_password_text_stored) + "\n")
                 user_info.write("wins = 0\n")
-                user_info.write("losses = 0\n")
+                user_info.write("losses = 0")
         
                 event_flag = False
                 submit_flag = False
-                dashboard_window(big_window_size, main_file_directory)
+                dashboard_window(big_window_size, main_file_directory, user_id_text_stored, user_password_text_stored)
                 user_info.close()
             else:
                 user_info.seek(0)
@@ -1171,14 +1221,23 @@ def login_page(big_window_size, small_window_size, main_file_directory):
                 data_set = []
                 for packet in user_data_packets:
                     data = packet.split(" = ")
-                    data_set.append(data[1])
+                    data_set.append(data[1].strip())
                 user_info.close()
 
-                if user_id_text_stored + str("\n") == data_set[0] and user_password_text_stored + str("\n") == data_set[1]:
+                if user_id_text_stored  == data_set[0] and user_password_text_stored == data_set[1]:
                     submit_flag = False
                     dashboard_window(big_window_size, main_file_directory, user_id_text_stored, user_password_text_stored)
                     break
                 else:
+                    display_text(gwindow, "*Incorrect Credentials Please Try Again", uni_red, 210, 330, 18, "OCRAEXT")
+                    enter_user_id_flag = False
+                    enter_password_flag = False
+                    user_id_text = ""
+                    user_id_text_stored = ""
+                    user_password_text = ""
+                    user_password_text_stored = ""
+                    user_id_rect = pygame.draw.rect(gwindow, white, [206.66, 240.32, 435, 33])
+                    user_password_rect = pygame.draw.rect(gwindow, white, [206.66, 287, 435, 33])
                     print("wrong credentials")
                     print (data_set)
 
