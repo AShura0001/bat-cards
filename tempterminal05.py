@@ -28,10 +28,7 @@ def display_text(gwindow, text, color, x, y, font_size, Font):
     gwindow.blit(screen_text, [x,y])
     return screen_text_rect
 
-
-
-
-def game_p2(window_size , main_file_directory):
+def game_p2(window_size , main_file_directory, user_id_text_stored, user_password_text_stored):
     gwindow_2 = pygame.display.set_mode(window_size)
     gwindow_2.fill(black)
     event_flag = True
@@ -524,7 +521,7 @@ def game_p2(window_size , main_file_directory):
             if attribute_lock_2 and card_lock_1:
                 time.sleep(2)
                 if chosen_attribute_index == 1:
-                    if int(sevendeadlysins_index[card_indexes_2[chosen_card_index]].rank) < int(sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].rank):
+                    if int(sevendeadlysins_index[card_indexes_2[chosen_card_index]].rank) > int(sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].rank):
                         # print(sevendeadlysins_index[card_indexes_2[chosen_card_index-1]].rank, sevendeadlysins_index[card_set_2[chosen_card_index_cpu]].rank)
                         card_won_set_1.append(card_set_2[chosen_card_index_cpu])
                         card_won_set_1.append(card_indexes_2[chosen_card_index])
@@ -692,20 +689,41 @@ def game_p2(window_size , main_file_directory):
         else:
             gwindow_2.fill(black)
             display_text(gwindow_2, "GAME OVER", white, 300, 200, 50, "COLONNA")
+            
             if (len(card_won_set_1) + len(card_set_1)) > (len(card_won_set_2) + len(card_set_2)):
                 display_text(gwindow_2, "Player 1 wins", white, 300, 300, 50, "COLONNA")
+                win = True
             elif (len(card_won_set_1) + len(card_set_1)) < (len(card_won_set_2) + len(card_set_2)):
                 display_text(gwindow_2, "Player 2 wins", white, 300, 300, 50, "COLONNA")
+                loss = True
+                user_data_packets[3] = "losses = {}\n".format(int(data_set[3])+1)
             for event in pygame.event.get():
-
                 if event.type == pygame.QUIT:
                     event_flag = False
-
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         event_flag = False
+            
 
     
         pygame.display.flip()
-game_p2(big_window_size, main_file_directory)
+    user_info = open(os.path.join(main_file_directory, "users", "{0}.batdata".format(user_id_text_stored)), "a+")
+    user_info.seek(0)
+    user_data_packets = user_info.readlines()
+    data_set = []
+    for packet in user_data_packets:
+        data = packet.split(" = ")
+        data_set.append(data[1])
+
+    if win:
+        user_data_packets[2] = "wins = {}\n".format(int(data_set[2])+1)
+    elif loss:
+        user_data_packets[3] = "losses = {}".format(int(data_set[3])+1)
+    
+    user_info.truncate(0)
+    user_info.seek(0)
+    user_info.writelines(user_data_packets)
+    user_info.close()
+
+game_p2(big_window_size, main_file_directory, "test4", "yea")
 pygame.quit()
