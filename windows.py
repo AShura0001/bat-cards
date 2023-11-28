@@ -1088,8 +1088,9 @@ def game_p2(window_size , main_file_directory,
                             if chosen_card_index == len(card_indexes_2):
                                 chosen_card_index -= 1
 
-                        if (place_button_rect.collidepoint(event.pos) and not
-                            attribute_check):
+                        if (place_button_rect.collidepoint(event.pos) 
+                            and chosen_attribute_final_value != ""
+                            and not attribute_check):
                             display_text(gwindow_2,
                                          "Attribute not usable", uni_red,
                                          385, 263, 12, "OCRAEXT")
@@ -2016,7 +2017,9 @@ def login_page(big_window_size, small_window_size, main_file_directory):
                     support_flag = False
                     id_writing_flag = False
                     password_writing_flag = False
-
+                    
+        display_text(gwindow, "Input data is case insensitive",
+                     white, 10, 540, 18, "OCRAEXT")
         display_text(gwindow, "BAT CARDS LOGIN",
                      white, 206.66, 201.61, 33, "OCRAEXT")
         gwindow.blit(arrow_login_page, (arrow_login_page_rect))
@@ -2051,56 +2054,61 @@ def login_page(big_window_size, small_window_size, main_file_directory):
             #Opens data file corresponding to the user data provided
             #Incase the data file is not available one will be created since the
             #file is opened in append mode i.e user will be registered.
-            user_info = open(
-                os.path.join(main_file_directory,
-                             "users", "{0}.batdata".format(
-                                 user_id_text_stored)), "a+")
-            user_info.seek(0)
-            content = user_info.read()
-            #Registering the new user with provided details.
-            if len(content) == 0:
-                user_info.write("username = "+ str(user_id_text_stored) + "\n")
-                user_info.write(
-                    "password = " + str(user_password_text_stored) + "\n")
-                user_info.write("wins = 0\n")
-                user_info.write("losses = 0")
-        
-                event_flag = False
-                submit_flag = False
-                dashboard_window(big_window_size, main_file_directory,
-                                 user_id_text_stored, user_password_text_stored)
-                user_info.close()
-            #Logging in the exisiting user with provided details.
-            else:
+            try:
+                user_info = open(
+                    os.path.join(main_file_directory,
+                                 "users", "{0}.batdata".format(
+                                     user_id_text_stored)), "a+")
                 user_info.seek(0)
-                user_data_packets = user_info.readlines()
-                data_set = []
-                for packet in user_data_packets:
-                    data = packet.split(" = ")
-                    data_set.append(data[1].strip())
-                user_info.close()
-
-                if (user_id_text_stored  == data_set[0] and
-                     user_password_text_stored == data_set[1]):
+                content = user_info.read()
+                #Registering the new user with provided details.
+                if len(content) == 0:
+                    user_info.write("username = "+ str(user_id_text_stored) + "\n")
+                    user_info.write(
+                        "password = " + str(user_password_text_stored) + "\n")
+                    user_info.write("wins = 0\n")
+                    user_info.write("losses = 0")
+            
+                    event_flag = False
                     submit_flag = False
-                    dashboard_window(big_window_size, main_file_directory, user_id_text_stored, user_password_text_stored)
-                    break
-                
+                    dashboard_window(big_window_size, main_file_directory,
+                                     user_id_text_stored, user_password_text_stored)
+                    user_info.close()
+                #Logging in the exisiting user with provided details.
                 else:
-                    display_text(gwindow,
-                                 "*Incorrect Credentials Please Try Again",
-                                 uni_red, 210, 330, 18, "OCRAEXT")
-                    enter_user_id_flag = False
-                    enter_password_flag = False
-                    user_id_text = ""
-                    user_id_text_stored = ""
-                    user_password_text = ""
-                    user_password_text_stored = ""
-                    user_id_rect = pygame.draw.rect(gwindow, white,
-                                                    [206.66, 240.32, 435, 33])
-                    user_password_rect = pygame.draw.rect(gwindow, white,
-                                                          [206.66, 287, 435, 33])
-                    print("wrong credentials")
-                    print (data_set)
+                    user_info.seek(0)
+                    user_data_packets = user_info.readlines()
+                    data_set = []
+                    for packet in user_data_packets:
+                        data = packet.split(" = ")
+                        data_set.append(data[1].strip())
+                    user_info.close()
+    
+                    if (user_id_text_stored  == data_set[0] and
+                         user_password_text_stored == data_set[1]):
+                        submit_flag = False
+                        dashboard_window(big_window_size, main_file_directory, user_id_text_stored, user_password_text_stored)
+                        break
+                    
+                    else:
+                        display_text(gwindow,
+                                     "*Incorrect Credentials Please Try Again",
+                                     uni_red, 210, 330, 18, "OCRAEXT")
+                        enter_user_id_flag = False
+                        enter_password_flag = False
+                        user_id_text = ""
+                        user_id_text_stored = ""
+                        user_password_text = ""
+                        user_password_text_stored = ""
+                        user_id_rect = pygame.draw.rect(gwindow, white,
+                                                        [206.66, 240.32, 435, 33])
+                        user_password_rect = pygame.draw.rect(gwindow, white,
+                                                              [206.66, 287, 435, 33])
+                        print("wrong credentials")
+                        print (data_set)
+            except:
+                display_text(gwindow,
+                         "Enter only alpha-numeric values from ASCII",
+                         uni_red, 210, 350, 18, "OCRAEXT")
 
         pygame.display.update()
