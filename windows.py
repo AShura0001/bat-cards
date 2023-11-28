@@ -2104,8 +2104,7 @@ def login_page(big_window_size, small_window_size, main_file_directory):
                                                         [206.66, 240.32, 435, 33])
                         user_password_rect = pygame.draw.rect(gwindow, white,
                                                               [206.66, 287, 435, 33])
-                        print("wrong credentials")
-                        print (data_set)
+            
             except:
                 display_text(gwindow,
                          "Enter only alpha-numeric values from ASCII",
