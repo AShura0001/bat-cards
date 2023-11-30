@@ -490,12 +490,24 @@ def guide(window_size, main_file_directory,
                                             [370, 490, 150, 50])
             display_text(guide_window, "Dashboard",
                          black, 390, 505, 20, "OCRAEXT")
-            for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONDOWN:
+            for event_2 in pygame.event.get():
+                if event_2.type == pygame.QUIT:
+                    event_flag = False
+                if event_2.type == pygame.KEYDOWN:
+                    if event_2.key == pygame.K_ESCAPE:
+                        event_flag = False
+
+                if event_2.type == pygame.MOUSEBUTTONDOWN:
                     #If the mouse button is pressed on the dashboard button
                     #then the dashboard window flag is set to True.
-                    if dasboard_btn.collidepoint(event.pos):
+                    if dasboard_btn.collidepoint(event_2.pos):
                         dashboard_btn_flag = True
+                    if next_arrow.collidepoint(event_2.pos) and point<7:
+                        point += 1
+                        guide_window.fill(black)
+                    if back_arrow.collidepoint(event_2.pos) and point>1:
+                        point -= 1
+                        guide_window.fill(black)
 
         pygame.display.update()
 
@@ -1906,6 +1918,10 @@ def game_p2(window_size , main_file_directory,
     user_info.writelines(user_data_packets)
     user_info.close()
 
+    #calls dashboard menu
+    dashboard_window(window_size, main_file_directory,
+                   user_id_text_stored, user_password_text_stored)
+
 def login_page(big_window_size, small_window_size, main_file_directory):
     
     gwindow = pygame.display.set_mode(big_window_size)
@@ -2087,6 +2103,7 @@ def login_page(big_window_size, small_window_size, main_file_directory):
                     if (user_id_text_stored  == data_set[0] and
                          user_password_text_stored == data_set[1]):
                         submit_flag = False
+                        event_flag = False
                         dashboard_window(big_window_size, main_file_directory, user_id_text_stored, user_password_text_stored)
                         break
                     
