@@ -525,7 +525,8 @@ def inventory(window_size, main_file_directory,
         if dashboard_flag:
             event_flag = False
             #Calls the dashboard function/window and breaks the loop.
-            dashboard_window(window_size, main_file_directory, user_id_text_stored, user_password_text_stored)
+            dashboard_window(window_size, main_file_directory, 
+                             user_id_text_stored, user_password_text_stored)
             break #Breaking loop increases the programm speed and prevents
                   #unnecessary display of any previous windows.
             
@@ -540,9 +541,11 @@ def inventory(window_size, main_file_directory,
                     dashboard_flag = True
 
         #User data is accessed to collect user's name and win/loss stats.
+        
         user_info = open(
             os.path.join(main_file_directory, "users",
                          "{0}.batdata".format(user_id_text_stored)), "a+")
+        
         user_info.seek(0)
         user_data_packets = user_info.readlines()
         data_set = []
@@ -564,7 +567,7 @@ def inventory(window_size, main_file_directory,
         #Display the header of the inventory window and user's name.
         display_text(inventory_window, "Inventory",
                      white, (window_size[1]//2) + 50, 10, 70, "ARLRDBD")
-        display_text (inventory_window, "User: {}".format(data_set[0].strip()),
+        display_text (inventory_window, "User: {}".format(str(data_set[0].strip())),
                       white, (window_size[1]//2) + 150, 90, 18, "OCRAEXT")
         
         
@@ -579,6 +582,7 @@ def inventory(window_size, main_file_directory,
                      str(data_set[3].strip()), white, 700, 300, 60, "ARLRDBD")
 
         pygame.display.update()
+    user_info.close()
 
 def mode_selector(window_size, main_file_directory,
                   user_id_text_stored, user_password_text_stored):
@@ -829,6 +833,7 @@ def game_p2(window_size , main_file_directory,
 
     horizontal_scroll_bar_pos = 56
 
+    #All the image assets required for this game window are loaded here.
     card_placement_holder_1 = pygame.image.load(
         os.path.join(main_file_directory, "assets",
                      "card_placement_holder.png")).convert_alpha()
@@ -942,6 +947,7 @@ def game_p2(window_size , main_file_directory,
                         event_flag = False
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    #Signals the initiation of ussage of horizontal scroll bar.
                     if scroll_bar_horizontal_rect.collidepoint(event.pos):
                         horizontal_indicator_flag = True
                     
@@ -951,8 +957,10 @@ def game_p2(window_size , main_file_directory,
                         horizontal_scroll_bar_pos -= 54
                         mrk_val_hzntl = horizontal_bar_markings.index(
                             horizontal_scroll_bar_pos)
-                        pygame.draw.rect(gwindow_2, black, ((104, 140),(231, 181) ))
-                        pygame.draw.rect(gwindow_2, black, ((0, 379), (757 , 159)))
+                        pygame.draw.rect(gwindow_2, black,
+                                         ((104, 140),(231, 181) ))
+                        pygame.draw.rect(gwindow_2, black,
+                                         ((0, 379), (757 , 159)))
                         card_holder_flag_1 = True
                         card_indexes_2.clear()
                     
@@ -962,11 +970,15 @@ def game_p2(window_size , main_file_directory,
                         horizontal_scroll_bar_pos += 54
                         mrk_val_hzntl = horizontal_bar_markings.index(
                             horizontal_scroll_bar_pos)
-                        pygame.draw.rect(gwindow_2, black, ((104, 140),(231, 181) ))
-                        pygame.draw.rect(gwindow_2, black, ((0, 379), (757 , 159)))
+                        pygame.draw.rect(gwindow_2, black,
+                                         ((104, 140),(231, 181) ))
+                        pygame.draw.rect(gwindow_2, black,
+                                         ((0, 379), (757 , 159)))
                         card_holder_flag_1 = True
                         card_indexes_2.clear()
                     
+                    #By checking both flags the features for players to make
+                    #make choices and place cards are enabled in this section.
                     if not card_lock_1 and turn_flag:
                         
                         #Had to use unnecessary variables like c_val, r_val etc.
@@ -1036,6 +1048,9 @@ def game_p2(window_size , main_file_directory,
                             s_flag = sevendeadlysins_index[c_val].sp_flag
                             i_flag = sevendeadlysins_index[c_val].iq_flag
                             
+                            #Makes sure that the attributes are chosen for the
+                            #card to be placed and the corresponding attribute
+                            #value is loaded up.
                             if chosen_attribute_index == 1 and r_flag:
                                 attribute_check = True
                                 c_val = card_indexes_2[chosen_card_index]
@@ -1067,6 +1082,7 @@ def game_p2(window_size , main_file_directory,
                                 i_val = sevendeadlysins_index[c_val].IQ
                                 chosen_attribute_final_value = int(i_val)
 
+                        #This place function is for when its the players turn
                         if (place_button_rect.collidepoint(event.pos) and
                             attribute_flag and
                             current_turn and
@@ -1078,10 +1094,14 @@ def game_p2(window_size , main_file_directory,
                             place_card_flag_1 = True
                             attribute_flag = True
                             
-                            # current_turn = False
+                            #The card is placed on user's turn and after the 
+                            #comparison is done the cpu gets its turn.
                             card_lock_1 = True
                             turn_flag = False
-
+                            attribute_lock_2 = False
+                            
+                            
+                        #This place function is for when its the cpu's turn
                         if (place_button_rect.collidepoint(event.pos) and
                             attribute_flag and not
                             current_turn and
@@ -1099,7 +1119,13 @@ def game_p2(window_size , main_file_directory,
                             
                             if chosen_card_index == len(card_indexes_2):
                                 chosen_card_index -= 1
-
+                            
+                        #This place function is for when an attribute is not
+                        #Usable if used before.
+                        #This is not required for the current version of program
+                        #because cards get discarded after each use, but in 
+                        #future versions cards might be reused and so this
+                        #this code will be useful. 
                         if (place_button_rect.collidepoint(event.pos) 
                             and chosen_attribute_final_value != ""
                             and not attribute_check):
@@ -1107,6 +1133,9 @@ def game_p2(window_size , main_file_directory,
                                          "Attribute not usable", uni_red,
                                          385, 263, 12, "OCRAEXT")
                             
+                    #This is the show whole deck feature, which lets player
+                    #see all the cards and their respective information from the
+                    #whole deck.
                     if show_whole_deck_rect.collidepoint(event.pos):
                         event_flag_2 = True
                         m = 1
@@ -1114,7 +1143,9 @@ def game_p2(window_size , main_file_directory,
                         
                         while event_flag_2:
                             screen.fill(black)
-
+                            display_text(screen, 
+                                         "press close btn to return to game",
+                                          white, 15, 15, 16, "AGENCYR")
                             for event_2 in pygame.event.get():
                                 if event_2.type == pygame.QUIT:
                                     event_flag_2 = False
@@ -1122,16 +1153,10 @@ def game_p2(window_size , main_file_directory,
                                                      ((0, 0), (640, 480)))
                                     time.sleep(0.1)
                                     gwindow_2 = pygame.display.set_mode(
-                                        (960,560))
-                                
-                                elif event_2.type == pygame.KEYDOWN:
-                                    if event_2.key == pygame.K_ESCAPE:
-                                        event_flag_2 = False
-                                        pygame.draw.rect(screen, black,
-                                                         ((0, 0), (640, 480)))
-                                        time.sleep(0.1)
-                                        gwindow_2 = pygame.display.set_mode(
-                                                                    960,560)
+                                                              (960,560))
+                                    #This is not a defined function and resets
+                                    #the window size because if not done, the 
+                                    #game progress might get lost.
                                 
                                 elif event_2.type == pygame.MOUSEBUTTONDOWN:
                                     if (back_rect.collidepoint(event_2.pos) and
@@ -1192,7 +1217,7 @@ def game_p2(window_size , main_file_directory,
                             pygame.display.flip()
                             time.sleep(0.1)
                                     
-
+                #Signals the end of interaction witht the horizontal scroll bar
                 if event.type == pygame.MOUSEBUTTONUP:
                     horizontal_indicator_flag = False
                 
@@ -1232,7 +1257,8 @@ def game_p2(window_size , main_file_directory,
                                 card_indexes_2.clear()
                                 break
                 
-            
+            #This section is dedicated to Creation and displaying of the button
+            #for attributes for the cards.
             attack_power_rect_btn = pygame.draw.rect(gwindow_2, black_light,
                                                      ((19, 203), (196 , 32)))
             health_power_rect_btn = pygame.draw.rect(gwindow_2, black_light,
@@ -1283,7 +1309,9 @@ def game_p2(window_size , main_file_directory,
                                           "press ESC to exit", white,
                                           19.55, 14.44, 17, "AGENCYR")
             
-        
+            #This creates a temporary set of cards from the users hands that
+            #needs to be shown below in the horizontal tab according to their
+            #respective orders.
             card_indexes_2 = []
             for i in range((mrk_val_hzntl*4) , ((mrk_val_hzntl+1)*5)): 
                 try:
@@ -1291,6 +1319,11 @@ def game_p2(window_size , main_file_directory,
                 except:
                     pass
             
+            #This section makes sure the cards are displayed properly by first
+            #creating a layer of black screen in the horizontal tab then
+            #this displaying the cards (if any) accordingly.
+            #This ensures that the cards from previous any other order don't
+            #get displayed where they don't need to be.
             if len(card_indexes_2) == 0:
                 pygame.draw.rect(gwindow_2, black, ((0, 379), (757 , 159)))
             if len(card_indexes_2) > 0:
@@ -1422,10 +1455,10 @@ def game_p2(window_size , main_file_directory,
             if not card_holder_flag_1:
                 display_text(gwindow_2, str(chosen_attribute_final_value),
                              black, 260, 164, 18, "OCRAEXT")        
-            if not card_holder_flag_2:    
-                display_text(gwindow_2, str(chosen_attribute_final_value_cpu),
-                             black, 466, 164, 18, "OCRAEXT")
 
+
+            #This section is for the CPU's work when its the players turn and
+            #the Player has submitted his/her card.
             if not turn_flag and not attribute_lock_2:
                 available_attribute_values = []
                 for cpu_cards in card_set_2: 
@@ -1449,9 +1482,13 @@ def game_p2(window_size , main_file_directory,
                             sevendeadlysins_index[cpu_cards].IQ)
 
                 if chosen_attribute_index == 1:
+                    chosen_attribute_final_value_cpu = min(
+                                available_attribute_values)
                     chosen_card_index_cpu = available_attribute_values.index(
                         min(available_attribute_values))
                 elif chosen_attribute_index in range (2, 7):
+                    chosen_attribute_final_value_cpu = max(
+                                available_attribute_values)
                     chosen_card_index_cpu = available_attribute_values.index(
                         max(available_attribute_values))
 
@@ -1467,12 +1504,21 @@ def game_p2(window_size , main_file_directory,
 
             if card_lock_2:
                 gwindow_2.blit(chosen_cpu_card_image,
-                               card_placement_holder_2_rect)     
-            
+                            card_placement_holder_2_rect)
+                if not card_holder_flag_2:    
+                    display_text(gwindow_2, str(chosen_attribute_final_value_cpu),
+                                black, 466, 164, 18, "OCRAEXT")
+                pygame.display.flip()
+                
+                     
+            #This section is for the comparison of cards chosen by both the
+            #player and the cpu and making sure everything is reset back to how
+            #it needs to be.
             if attribute_lock_2 and card_lock_1:
                 time.sleep(2)
 
                 if chosen_attribute_index == 1:
+                    
                     if (
                         (int(sevendeadlysins_index[(
                             card_indexes_2[chosen_card_index])].rank) ) < (
@@ -1490,6 +1536,10 @@ def game_p2(window_size , main_file_directory,
                         card_holder_flag_1 = True
                         card_holder_flag_2 = True
                         card_lock_1 = False
+                        chosen_attribute_index = 0
+                        chosen_attribute_final_value_cpu = ""
+                        chosen_attribute_final_value = ""
+                        available_attribute_values.clear()
                     
                     elif ((int(sevendeadlysins_index[(
                         card_indexes_2[chosen_card_index])].rank)) > (
@@ -1507,6 +1557,29 @@ def game_p2(window_size , main_file_directory,
                         card_holder_flag_1 = True
                         card_holder_flag_2 = True
                         card_lock_1 = False
+                        chosen_attribute_index = 0
+                        chosen_attribute_final_value_cpu = ""
+                        chosen_attribute_final_value = ""
+                        available_attribute_values.clear()
+                    
+                    elif ((int(sevendeadlysins_index[(
+                        card_indexes_2[chosen_card_index])].rank)) == (
+                            int(sevendeadlysins_index[(
+                                card_set_2[chosen_card_index_cpu])].rank))): 
+
+                        card_set_1.remove(card_indexes_2[chosen_card_index])
+                        card_set_2.remove(card_set_2[chosen_card_index_cpu])
+                        pygame.draw.rect(gwindow_2, black,
+                                         ((104, 140),(231, 181)))
+                        pygame.draw.rect(gwindow_2, black,
+                                         ((104, 140),(435, 181)))
+                        card_holder_flag_1 = True
+                        card_holder_flag_2 = True
+                        card_lock_1 = False
+                        chosen_attribute_index = 0
+                        chosen_attribute_final_value_cpu = ""
+                        chosen_attribute_final_value = ""
+                        available_attribute_values.clear()
 
                 if chosen_attribute_index == 2:
                     if ((sevendeadlysins_index[(
@@ -1525,6 +1598,10 @@ def game_p2(window_size , main_file_directory,
                         card_holder_flag_1 = True
                         card_holder_flag_2 = True
                         card_lock_1 = False
+                        chosen_attribute_index = 0
+                        chosen_attribute_final_value_cpu = ""
+                        chosen_attribute_final_value = ""
+                        available_attribute_values.clear()
                     
                     elif ((sevendeadlysins_index[(
                         card_indexes_2[chosen_card_index])].ATK) < (
@@ -1542,6 +1619,29 @@ def game_p2(window_size , main_file_directory,
                         card_holder_flag_1 = True
                         card_holder_flag_2 = True
                         card_lock_1 = False
+                        chosen_attribute_index = 0
+                        chosen_attribute_final_value_cpu = ""
+                        chosen_attribute_final_value = ""
+                        available_attribute_values.clear()
+                    
+                    elif ((sevendeadlysins_index[(
+                        card_indexes_2[chosen_card_index])].ATK) == (
+                            sevendeadlysins_index[(
+                                card_set_2[chosen_card_index_cpu])].ATK)): 
+
+                        card_set_1.remove(card_indexes_2[chosen_card_index])
+                        card_set_2.remove(card_set_2[chosen_card_index_cpu])
+                        pygame.draw.rect(gwindow_2, black,
+                                         ((104, 140),(231, 181)))
+                        pygame.draw.rect(gwindow_2, black,
+                                         ((104, 140),(435, 181)))
+                        card_holder_flag_1 = True
+                        card_holder_flag_2 = True
+                        card_lock_1 = False
+                        chosen_attribute_index = 0
+                        chosen_attribute_final_value_cpu = ""
+                        chosen_attribute_final_value = ""
+                        available_attribute_values.clear()
                 
 
                 if chosen_attribute_index == 3:
@@ -1561,6 +1661,10 @@ def game_p2(window_size , main_file_directory,
                         card_holder_flag_1 = True
                         card_holder_flag_2 = True
                         card_lock_1 = False
+                        chosen_attribute_index = 0
+                        chosen_attribute_final_value_cpu = ""
+                        chosen_attribute_final_value = ""
+                        available_attribute_values.clear()
                     
                     elif ((sevendeadlysins_index[(
                         card_indexes_2[chosen_card_index])].HP) < (
@@ -1578,6 +1682,30 @@ def game_p2(window_size , main_file_directory,
                         card_holder_flag_1 = True
                         card_holder_flag_2 = True
                         card_lock_1 = False
+                        chosen_attribute_index = 0
+                        chosen_attribute_final_value_cpu = ""
+                        chosen_attribute_final_value = ""
+                        available_attribute_values.clear()
+                    
+                    elif ((sevendeadlysins_index[(
+                        card_indexes_2[chosen_card_index])].HP) == (
+                            sevendeadlysins_index[(
+                                card_set_2[chosen_card_index_cpu])].HP)):
+                        
+                        card_set_1.remove(card_indexes_2[chosen_card_index])
+                        card_set_2.remove(card_set_2[chosen_card_index_cpu])
+                        pygame.draw.rect(gwindow_2, black,
+                                            ((104, 140),(231, 181)))
+                        pygame.draw.rect(gwindow_2, black,
+                                            ((104, 140),(435, 181)))
+                        card_holder_flag_1 = True
+                        card_holder_flag_2 = True
+                        card_lock_1 = False
+                        chosen_attribute_index = 0
+                        chosen_attribute_final_value_cpu = ""
+                        chosen_attribute_final_value = ""
+                        available_attribute_values.clear()
+
                 
 
                 if chosen_attribute_index == 4:
@@ -1597,6 +1725,10 @@ def game_p2(window_size , main_file_directory,
                         card_holder_flag_1 = True
                         card_holder_flag_2 = True
                         card_lock_1 = False
+                        chosen_attribute_index = 0
+                        chosen_attribute_final_value_cpu = ""
+                        chosen_attribute_final_value = ""
+                        available_attribute_values.clear()
                     
                     elif ((sevendeadlysins_index[(
                         card_indexes_2[chosen_card_index])].DP) < (
@@ -1614,7 +1746,30 @@ def game_p2(window_size , main_file_directory,
                         card_holder_flag_1 = True
                         card_holder_flag_2 = True
                         card_lock_1 = False
+                        chosen_attribute_index = 0
+                        chosen_attribute_final_value_cpu = ""
+                        chosen_attribute_final_value = ""
+                        available_attribute_values.clear()
                 
+                    elif ((sevendeadlysins_index[(
+                        card_indexes_2[chosen_card_index])].DP) == (
+                            sevendeadlysins_index[(
+                                card_set_2[chosen_card_index_cpu])].DP)):
+                        
+                        card_set_1.remove(card_indexes_2[chosen_card_index])
+                        card_set_2.remove(card_set_2[chosen_card_index_cpu])
+                        pygame.draw.rect(gwindow_2, black,
+                                            ((104, 140),(231, 181)))
+                        pygame.draw.rect(gwindow_2, black,
+                                            ((104, 140),(435, 181)))
+                        card_holder_flag_1 = True
+                        card_holder_flag_2 = True
+                        card_lock_1 = False
+                        chosen_attribute_index = 0
+                        chosen_attribute_final_value_cpu = ""
+                        chosen_attribute_final_value = ""
+                        available_attribute_values.clear()
+
 
                 if chosen_attribute_index == 5:
                     if ((sevendeadlysins_index[(
@@ -1633,6 +1788,10 @@ def game_p2(window_size , main_file_directory,
                         card_holder_flag_1 = True
                         card_holder_flag_2 = True
                         card_lock_1 = False
+                        chosen_attribute_index = 0
+                        chosen_attribute_final_value_cpu = ""
+                        chosen_attribute_final_value = ""
+                        available_attribute_values.clear()
                     
                     elif ((sevendeadlysins_index[(
                         card_indexes_2[chosen_card_index])].SP) < (
@@ -1650,10 +1809,33 @@ def game_p2(window_size , main_file_directory,
                         card_holder_flag_1 = True
                         card_holder_flag_2 = True
                         card_lock_1 = False
+                        chosen_attribute_index = 0
+                        chosen_attribute_final_value_cpu = ""
+                        chosen_attribute_final_value = ""
+                        available_attribute_values.clear()
                 
+                    elif ((sevendeadlysins_index[(
+                        card_indexes_2[chosen_card_index])].SP) == (
+                            sevendeadlysins_index[(
+                                card_set_2[chosen_card_index_cpu])].SP)):
+                        
+                        card_set_1.remove(card_indexes_2[chosen_card_index])
+                        card_set_2.remove(card_set_2[chosen_card_index_cpu])
+                        pygame.draw.rect(gwindow_2, black,
+                                            ((104, 140),(231, 181)))
+                        pygame.draw.rect(gwindow_2, black,
+                                            ((104, 140),(435, 181)))
+                        card_holder_flag_1 = True
+                        card_holder_flag_2 = True
+                        card_lock_1 = False
+                        chosen_attribute_index = 0
+                        chosen_attribute_final_value_cpu = ""
+                        chosen_attribute_final_value = ""
+                        available_attribute_values.clear()
+
+
 
                 if chosen_attribute_index == 6:
-                    
                     if ((sevendeadlysins_index[(
                         card_indexes_2[chosen_card_index])].IQ) > (
                             sevendeadlysins_index[(
@@ -1670,6 +1852,10 @@ def game_p2(window_size , main_file_directory,
                         card_holder_flag_1 = True
                         card_holder_flag_2 = True
                         card_lock_1 = False
+                        chosen_attribute_index = 0
+                        chosen_attribute_final_value_cpu = ""
+                        chosen_attribute_final_value = ""
+                        available_attribute_values.clear()
                     
                     elif ((sevendeadlysins_index[(
                         card_indexes_2[chosen_card_index])].IQ) < (
@@ -1687,9 +1873,33 @@ def game_p2(window_size , main_file_directory,
                         card_holder_flag_1 = True
                         card_holder_flag_2 = True
                         card_lock_1 = False
+                        chosen_attribute_index = 0
+                        chosen_attribute_final_value_cpu = ""
+                        chosen_attribute_final_value = ""
+                        available_attribute_values.clear()
                 
-                
-                
+                    elif ((sevendeadlysins_index[(
+                        card_indexes_2[chosen_card_index])].IQ) == (
+                            sevendeadlysins_index[(
+                                card_set_2[chosen_card_index_cpu])].IQ)):
+                        
+                        card_set_1.remove(card_indexes_2[chosen_card_index])
+                        card_set_2.remove(card_set_2[chosen_card_index_cpu])
+                        pygame.draw.rect(gwindow_2, black,
+                                            ((104, 140),(231, 181)))
+                        pygame.draw.rect(gwindow_2, black,
+                                            ((104, 140),(435, 181)))
+                        card_holder_flag_1 = True
+                        card_holder_flag_2 = True
+                        card_lock_1 = False
+                        chosen_attribute_index = 0
+                        chosen_attribute_final_value_cpu = ""
+                        chosen_attribute_final_value = ""
+                        available_attribute_values.clear()
+
+                #This section is dedicated to Computer choosing the cards on its
+                #own turn and changing flags for letting the player choose
+                #his/her own card on the basis of computers attribute choice.
                 if not turn_flag and len(card_set_2)> 0:
                     chosen_attribute_index = random.randint(1, 6)
                     chosen_attribute_final = attributes_list[(
@@ -1727,15 +1937,20 @@ def game_p2(window_size , main_file_directory,
                     #Luck probability for best card to be banned is 2%.
                     #Luck probability for wrong or random choice is 50%.
                     if choice_luck == 11 or choice_luck == 8:
+                        #In this lucky turn the player definitely won't have to
+                        #worry about the strongest card computer holds under
+                        #that chosen attribute.
                         if chosen_attribute_index == 1:
                             ban_cpu_c = available_attribute_values.index(
                                 min(available_attribute_values))
                             card_set_2.remove(card_set_2[ban_cpu_c])
+                            available_attribute_values.clear()
                             for cpu_cards in card_set_2:
                                 available_attribute_values.append(
                                     int(sevendeadlysins_index[cpu_cards].rank))
+                                
                             chosen_card_index_cpu = random.randint(
-                                1, len(available_attribute_values))
+                                0, (len(available_attribute_values)-1))
                             r_val_1806 = sevendeadlysins_index[(
                                 card_set_2[chosen_card_index_cpu])].rank
                             chosen_attribute_final_value_cpu = int(r_val_1806)
@@ -1744,6 +1959,8 @@ def game_p2(window_size , main_file_directory,
                             ban_cpu_c = available_attribute_values.index(
                                 max(available_attribute_values))
                             card_set_2.remove(card_set_2[ban_cpu_c])
+
+                            available_attribute_values.clear()
                             for cpu_cards in card_set_2:
                                 if chosen_attribute_index == 2:
                                     available_attribute_values.append(
@@ -1761,10 +1978,9 @@ def game_p2(window_size , main_file_directory,
                                     available_attribute_values.append(
                                         sevendeadlysins_index[cpu_cards].IQ)
                             
-                            mp_2 = random.randint(
-                                1, len(available_attribute_values))
-                            mp_122 = available_attribute_values.index(mp_2)
-                            chosen_card_index_cpu = mp_122
+
+                            chosen_card_index_cpu = random.randint(
+                                0, (len(available_attribute_values)-1))
                             
                             if chosen_attribute_index == 2:
                                 r_val_1806 = sevendeadlysins_index[(
@@ -1788,15 +2004,18 @@ def game_p2(window_size , main_file_directory,
                                 chosen_attribute_final_value_cpu = r_val_1806
                             
                     elif choice_luck%2 == 0:
+                        #In this lucky turn the player might have a chance to
+                        #be faced with the strongest card computer has as well
+                        #as have the chance to not get hit by the strongest one.
                         if chosen_attribute_index == 1:
                             chosen_card_index_cpu = random.randint(
-                                1, len(available_attribute_values))
+                                0, (len(available_attribute_values)-1))
                             r_val_1806 = sevendeadlysins_index[(
                                 card_set_2[chosen_card_index_cpu])].rank
                             chosen_attribute_final_value_cpu = int(r_val_1806)
                         elif chosen_attribute_index in range (2, 7):
                             chosen_card_index_cpu = random.randint(
-                                1, len(available_attribute_values))
+                                0, (len(available_attribute_values)-1))
                             if chosen_attribute_index == 2:
                                 r_val_1806 = sevendeadlysins_index[(
                                     card_set_2[chosen_card_index_cpu])].ATK
@@ -1875,24 +2094,37 @@ def game_p2(window_size , main_file_directory,
         #Runs when one of the hand become empty.
         else:
             gwindow_2.fill(black)
-            display_text(gwindow_2, "GAME OVER", white, 300, 200, 50, "COLONNA")
+            display_text(gwindow_2, "GAME OVER", white, 375, 200, 50, "COLONNA")
             
             if total_cards_1 > total_cards_2:
                 display_text(gwindow_2, "Player 1 wins",
-                             white, 300, 300, 50, "COLONNA")
+                             white, 375, 300, 50, "COLONNA")
                 win = True
             
             elif total_cards_1 < total_cards_2:
                 display_text(gwindow_2, "Player 2 wins",
-                             white, 300, 300, 50, "COLONNA")
+                             white, 375, 300, 50, "COLONNA")
                 loss = True
                 user_data_packets[3] = "losses = {}\n".format(
                                            int(data_set[3])+1)
+            
+            elif total_cards_1 == total_cards_2:
+                display_text(gwindow_2, "It's a draw",
+                             white, 375, 300, 50, "COLONNA")
+            dashboard_button = pygame.draw.rect(gwindow_2, white,
+                                                ((380, 400), (200, 80)))
+            dashboard_txt = display_text(gwindow_2, "Dashboard", black,
+                                         388, 420, 35, "OCRAEXT")
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     event_flag = False
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
+                        event_flag = False
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    #Ends the program and calls the dashboard window again.
+                    if dashboard_button.collidepoint(event.pos):
                         event_flag = False
             
         pygame.display.flip()
@@ -1989,13 +2221,31 @@ def login_page(big_window_size, small_window_size, main_file_directory):
 
 
                 elif id_writing_flag and enter_user_id_flag:
-                    user_id_text += event.unicode
-                    user_id_text_stored += event.unicode
-                
+                    input_text = event.unicode
+                    try:
+                        if ((ord(input_text) in range (48, 58))
+                        or (ord(input_text) in range (65, 91))
+                        or (ord(input_text) in range (97, 122))
+                        or (ord(input_text) == 95)):
+                            user_id_text += event.unicode
+                            user_id_text_stored += event.unicode
+                        else:
+                            continue
+                    except:
+                        continue
                 elif password_writing_flag and enter_password_flag:
-                    user_password_text += "*"
-                    user_password_text_stored += event.unicode
-
+                    input_text = event.unicode
+                    try:
+                        if ((ord(input_text) in range (48, 58))
+                        or (ord(input_text) in range (65, 91))
+                        or (ord(input_text) in range (97, 122))
+                        or (ord(input_text) == 95)):
+                            user_password_text += "*"
+                            user_password_text_stored += event.unicode
+                        else:
+                            continue
+                    except:
+                        continue
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if user_id_rect.collidepoint(event.pos):
                     enter_user_id_flag = True
@@ -2034,7 +2284,7 @@ def login_page(big_window_size, small_window_size, main_file_directory):
                     id_writing_flag = False
                     password_writing_flag = False
                     
-        display_text(gwindow, "Input data is case insensitive",
+        display_text(gwindow, "Input data alphanumeric or underscore only",
                      white, 10, 540, 18, "OCRAEXT")
         display_text(gwindow, "BAT CARDS LOGIN",
                      white, 206.66, 201.61, 33, "OCRAEXT")
@@ -2066,7 +2316,8 @@ def login_page(big_window_size, small_window_size, main_file_directory):
             if user_passowrd_text_rect.width > 434:
                 user_password_text = user_password_text[1:]
         
-        if submit_flag and len(user_id_text_stored)>0 and len(user_password_text_stored)>0:
+        if (submit_flag and len(user_id_text_stored)>0 and
+            len(user_password_text_stored)>0):
             #Opens data file corresponding to the user data provided
             #Incase the data file is not available one will be created since the
             #file is opened in append mode i.e user will be registered.
@@ -2079,7 +2330,8 @@ def login_page(big_window_size, small_window_size, main_file_directory):
                 content = user_info.read()
                 #Registering the new user with provided details.
                 if len(content) == 0:
-                    user_info.write("username = "+ str(user_id_text_stored) + "\n")
+                    user_info.write(
+                        "username = "+ str(user_id_text_stored) + "\n")
                     user_info.write(
                         "password = " + str(user_password_text_stored) + "\n")
                     user_info.write("wins = 0\n")
@@ -2087,9 +2339,11 @@ def login_page(big_window_size, small_window_size, main_file_directory):
             
                     event_flag = False
                     submit_flag = False
-                    dashboard_window(big_window_size, main_file_directory,
-                                     user_id_text_stored, user_password_text_stored)
                     user_info.close()
+                    dashboard_window(big_window_size, main_file_directory,
+                                     user_id_text_stored,
+                                     user_password_text_stored)
+                    break
                 #Logging in the exisiting user with provided details.
                 else:
                     user_info.seek(0)
@@ -2104,13 +2358,21 @@ def login_page(big_window_size, small_window_size, main_file_directory):
                          user_password_text_stored == data_set[1]):
                         submit_flag = False
                         event_flag = False
-                        dashboard_window(big_window_size, main_file_directory, user_id_text_stored, user_password_text_stored)
+                        dashboard_window(big_window_size, main_file_directory,
+                                         user_id_text_stored,
+                                         user_password_text_stored)
                         break
                     
                     else:
                         display_text(gwindow,
                                      "*Incorrect Credentials Please Try Again",
                                      uni_red, 210, 330, 18, "OCRAEXT")
+                        display_text(gwindow,
+                                     "*Non-alphanumeric values not allowed",
+                                     uni_red, 210, 350, 18, "OCRAEXT")
+                        display_text(gwindow,
+                                     "*Avoid repetition of existing user ID",
+                                     uni_red, 210, 370, 18, "OCRAEXT")
                         enter_user_id_flag = False
                         enter_password_flag = False
                         user_id_text = ""
@@ -2118,9 +2380,10 @@ def login_page(big_window_size, small_window_size, main_file_directory):
                         user_password_text = ""
                         user_password_text_stored = ""
                         user_id_rect = pygame.draw.rect(gwindow, white,
-                                                        [206.66, 240.32, 435, 33])
+                                                    [206.66, 240.32, 435, 33])
                         user_password_rect = pygame.draw.rect(gwindow, white,
-                                                              [206.66, 287, 435, 33])
+                                                       [206.66, 287, 435, 33])
+                    user_info.close()
             
             except:
                 display_text(gwindow,
