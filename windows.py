@@ -84,7 +84,8 @@ def support_window(window_size, main_file_directory):
 
 def dashboard_window(window_size, main_file_directory,
                      user_id_text_stored, user_password_text_stored):
-    
+    """This is the function which is used to display the dashboard window"""
+
     dashboard_window = pygame.display.set_mode(window_size)
     pygame.display.set_caption("B.A.T CARDS")
     event_flag = True
@@ -137,6 +138,8 @@ def dashboard_window(window_size, main_file_directory,
                     event_flag = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
+                #This is used to turn the flags according to interactions made
+                #with respective buttons on the dashboard window with the mouse.
                 if exit_dashboard_btn_rect.collidepoint(event.pos):
                     event_flag = False
                 elif white_rectangle_1.collidepoint(event.pos):
@@ -195,6 +198,7 @@ def dashboard_window(window_size, main_file_directory,
                     Setting_flag = False
                     Logs_flag = False
 
+        #Creates and displays all the buttons on the dashboard window
         white_rectangle_1 = pygame.draw.rect(dashboard_window, white,
                                              ((260,297), (216, 35)))
         white_rectangle_2 = pygame.draw.rect(dashboard_window, white,
@@ -243,6 +247,8 @@ def dashboard_window(window_size, main_file_directory,
 def guide(window_size, main_file_directory,
           user_id_text_stored, user_password_text_stored):
     
+    """This is the function which is used to display the guide for the
+    Whole game and its features."""
     guide_window = pygame.display.set_mode(window_size)
     pygame.display.set_caption("B.A.T CARDS")
     guide_window.fill(black)
@@ -268,6 +274,8 @@ def guide(window_size, main_file_directory,
                     event_flag = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
+                #Here its the mouse interactions are used to navigate between
+                #the slides of the guide window.
                 if next_arrow.collidepoint(event.pos) and point<7:
                     point += 1
                     guide_window.fill(black)
@@ -277,12 +285,13 @@ def guide(window_size, main_file_directory,
                 
         display_text(guide_window, "Guide", white, 380, 15, 80, "COLONNA")
         
-        #Creating Triangles to help user move through guide slides.
+        #Creating Triangle buttons to help user move through guide slides.
         next_arrow = pygame.draw.polygon(guide_window, white,
                                          [[945, 525], [915, 510], [915, 540]])
         back_arrow = pygame.draw.polygon(guide_window, white,
                                          [[20, 525], [50, 510], [50, 540]])
         
+        #Each line is made up with 80 chr max per line to abide the pep8 rules.
         if point == 1:
             l1 = "There are 52 cards in a deck (per universe). All cards are "
             l2 = "unique in their own way and all cards are sorted by rank from"
@@ -329,7 +338,7 @@ def guide(window_size, main_file_directory,
         
         if point == 3:
             l1 = "The game starts with the computer shuffling the deck randomly"
-            l2 = "providing the players with 26 random cards sorted according to"
+            l2 = "provides the players with 26 random cards sorted according to"
             l3 = "their ranks. And player is given the first turn to choose"
             l4 = "a card from the hand and one of its respective attributes"
 
@@ -353,8 +362,8 @@ def guide(window_size, main_file_directory,
             l5 = "information regarding respective"
             l6 = "cards are displayed."
             l7 = "You can also use 'Show Whole Deck' feature at the bottom of"
-            l8 = "the right vertical tab to access all the 52 cards available in"
-            l9 = "the deck and their respective informations."
+            l8 = "the right vertical tab to access all the 52 cards available"
+            l9 = "in the deck and their respective informations."
 
             display_text(guide_window, "04.", white, 40, 140, 20, "OCRAEXT")
             display_text(guide_window, l1, white, 90, 140, 15, "OCRAEXT")
@@ -514,6 +523,8 @@ def guide(window_size, main_file_directory,
 def inventory(window_size, main_file_directory,
               user_id_text_stored, user_password_text_stored):
     
+    """This is the function which is used to display the inventory window.
+    Which shows the user's name and win/loss stats."""
     inventory_window = pygame.display.set_mode(window_size)
     pygame.display.set_caption("B.A.T CARDS")
     inventory_window.fill(black)
@@ -554,11 +565,14 @@ def inventory(window_size, main_file_directory,
             data_set.append(data[1].strip())
 
         #Create a border around the inventory window.
-        pygame.draw.rect(inventory_window, white, [0, 0, window_size[0], window_size[1]], 5)
+        pygame.draw.rect(inventory_window, white,
+                         [0, 0, window_size[0], window_size[1]], 5)
         
         #Create a button to return to dashboard menu
-        dashboard_menu_btn = pygame.draw.rect(inventory_window, white, [380, 435, 200, 100])
-        display_text(inventory_window, "Dashboard", black, 400, 465, 32, "OCRAEXT")
+        dashboard_menu_btn = pygame.draw.rect(inventory_window, white,
+                                              [380, 435, 200, 100])
+        display_text(inventory_window, "Dashboard", black,
+                     400, 465, 32, "OCRAEXT")
         
         press_ESC_text = display_text(inventory_window,
                                       "press ESC to exit", white,
@@ -567,10 +581,11 @@ def inventory(window_size, main_file_directory,
         #Display the header of the inventory window and user's name.
         display_text(inventory_window, "Inventory",
                      white, (window_size[1]//2) + 50, 10, 70, "ARLRDBD")
-        display_text (inventory_window, "User: {}".format(str(data_set[0].strip())),
+        display_text (inventory_window,
+                      "User: {}".format(str(data_set[0].strip())),
                       white, (window_size[1]//2) + 150, 90, 18, "OCRAEXT")
         
-        
+        #Display the win/loss stats of the user.
         WINS = display_text(inventory_window,
                             "WINS", white, 90, 200, 90, "ARLRDBD")
         display_text(inventory_window,
@@ -587,19 +602,23 @@ def inventory(window_size, main_file_directory,
 def mode_selector(window_size, main_file_directory,
                   user_id_text_stored, user_password_text_stored):
 
+    """This is the function which is used to display the mode selector menu"""
     mode_selector_window = pygame.display.set_mode(window_size)
     pygame.display.set_caption("B.A.T CARDS")
     mode_selector_window.fill(black)
 
+    #button images are loaded up here.
     solo_btn_image = pygame.image.load(
         os.path.join(main_file_directory, "assets",
                      "solo_mode_btn.png")).convert_alpha()
     solo_btn_image_rect = solo_btn_image.get_rect(center = (342, 300))
 
+    #multiplayer btn is greyed out for the initial release.
     multiplayer_btn_image = pygame.image.load(
         os.path.join(main_file_directory, "assets",
                      "multiplayer_mode_btn.png")).convert_alpha()
-    multiplayer_btn_image_rect = multiplayer_btn_image.get_rect(center = (610, 300))
+    multiplayer_btn_image_rect = multiplayer_btn_image.get_rect(
+                                            center = (610, 300))
     
     event_flag = True
     solo_mode_flag = False
@@ -610,7 +629,8 @@ def mode_selector(window_size, main_file_directory,
         if solo_mode_flag:
             solo_mode_flag = False
             # Calls the solo_menu_selector function/window and breaks the loop.
-            solo_menu_selector(window_size, main_file_directory, user_id_text_stored, user_password_text_stored)
+            solo_menu_selector(window_size, main_file_directory,
+                               user_id_text_stored, user_password_text_stored)
             break #Breaking loop increases the programm speed and prevents
                     #unnecessary display of any previous windows.
             
@@ -630,7 +650,8 @@ def mode_selector(window_size, main_file_directory,
                     solo_mode_flag = False
 
         mode_selector_window.blit(solo_btn_image, solo_btn_image_rect)
-        mode_selector_window.blit(multiplayer_btn_image, multiplayer_btn_image_rect)
+        mode_selector_window.blit(multiplayer_btn_image,
+                                  multiplayer_btn_image_rect)
         
         press_ESC_text = display_text(mode_selector_window,
                                       "press ESC to exit", white,
@@ -644,6 +665,10 @@ def mode_selector(window_size, main_file_directory,
 def solo_menu_selector(window_size, main_file_directory,
                        user_id_text_stored, user_password_text_stored):
     
+    """This is the function which is used to display the solo menu that
+    diverges into sub category of free play and universes choices. Although
+    Initial release doesn't include any other universe except the seven deadly
+    sins deck/universe."""
     solo_menu_window = pygame.display.set_mode(window_size)
     pygame.display.set_caption("B.A.T CARDS")
     solo_menu_window.fill(black)
@@ -665,7 +690,8 @@ def solo_menu_selector(window_size, main_file_directory,
         if free_play_flag:
             free_play_flag = False
             #Calls the game function/window and breaks the loop.
-            game_p1(window_size, main_file_directory, user_id_text_stored, user_password_text_stored)
+            game_p1(window_size, main_file_directory,
+                    user_id_text_stored, user_password_text_stored)
             break #Breaking loop increases the programm speed and prevents
                   #unnecessary display of any previous windows.
         
@@ -682,7 +708,8 @@ def solo_menu_selector(window_size, main_file_directory,
                     free_play_flag = True
         
         text_1 = display_text(
-            solo_menu_window, "FREE PLAY ONLY VERSION [seven deadly sins deck]",
+            solo_menu_window,
+            "FREE PLAY ONLY VERSION [with seven deadly sins deck only]",
             uni_red, 180, 130, 20, "OCRAEXT")
         
         solo_menu_window.blit(universes_btn_image, universes_btn_image_rect)
@@ -700,7 +727,9 @@ def solo_menu_selector(window_size, main_file_directory,
 
 def game_p1(window_size , main_file_directory,
             user_id_text_stored, user_password_text_stored):
-
+    
+    """This function only serves the purpose of starting the game and also
+    showing a glimpse of the whole deck before game."""
     gwindow_1 = pygame.display.set_mode(window_size)
     pygame.display.set_caption("B.A.T CARDS")
     gwindow_1.fill(black)
@@ -773,6 +802,8 @@ def game_p1(window_size , main_file_directory,
 def game_p2(window_size , main_file_directory,
             user_id_text_stored, user_password_text_stored):
     
+    """This is the actual game function/window where the game is played i.e.
+    The heart of the game."""
     gwindow_2 = pygame.display.set_mode(window_size)
     pygame.display.set_caption("B.A.T CARDS")
     gwindow_2.fill(black)
@@ -1506,7 +1537,8 @@ def game_p2(window_size , main_file_directory,
                 gwindow_2.blit(chosen_cpu_card_image,
                             card_placement_holder_2_rect)
                 if not card_holder_flag_2:    
-                    display_text(gwindow_2, str(chosen_attribute_final_value_cpu),
+                    display_text(gwindow_2,
+                                str(chosen_attribute_final_value_cpu),
                                 black, 466, 164, 18, "OCRAEXT")
                 pygame.display.flip()
                 
@@ -2155,7 +2187,10 @@ def game_p2(window_size , main_file_directory,
                    user_id_text_stored, user_password_text_stored)
 
 def login_page(big_window_size, small_window_size, main_file_directory):
-    
+    """This is the login page function which is called when the program
+    is run. It takes the user id and password and checks if they are
+    valid or not (or registers new users).
+    If they are valid then it calls the dashboard function"""
     gwindow = pygame.display.set_mode(big_window_size)
     arrow_login_page = pygame.image.load(
         os.path.join(main_file_directory,
@@ -2211,15 +2246,18 @@ def login_page(big_window_size, small_window_size, main_file_directory):
                     id_writing_flag = False
                     password_writing_flag = False
 
+                #Backspace to delete last characters of the respective input txt
                 if event.key == pygame.K_BACKSPACE:
                     if enter_user_id_flag:
                         user_id_text = user_id_text[:-1]
                         user_id_text_stored = user_id_text_stored[:-1]
                     elif enter_password_flag:
                         user_password_text = user_password_text[:-1]
-                        user_password_text_stored = user_password_text_stored[:-1]
+                        halo_101 = user_password_text_stored[:-1]
+                        user_password_text_stored = halo_101
 
-
+                #Checks whether the input text is alphanumeric or underscore
+                #and if it is then it is added to the stores that input text.
                 elif id_writing_flag and enter_user_id_flag:
                     input_text = event.unicode
                     try:
@@ -2233,6 +2271,7 @@ def login_page(big_window_size, small_window_size, main_file_directory):
                             continue
                     except:
                         continue
+
                 elif password_writing_flag and enter_password_flag:
                     input_text = event.unicode
                     try:
@@ -2283,7 +2322,8 @@ def login_page(big_window_size, small_window_size, main_file_directory):
                     support_flag = False
                     id_writing_flag = False
                     password_writing_flag = False
-                    
+        
+        #Small alert for users
         display_text(gwindow, "Input data alphanumeric or underscore only",
                      white, 10, 540, 18, "OCRAEXT")
         display_text(gwindow, "BAT CARDS LOGIN",
@@ -2291,6 +2331,7 @@ def login_page(big_window_size, small_window_size, main_file_directory):
         gwindow.blit(arrow_login_page, (arrow_login_page_rect))
         gwindow.blit(support_logo, (support_logo_rect))
 
+        #indication of the purpose of the input fields
         if not enter_user_id_flag and len(user_id_text) == 0:
             display_text(gwindow, "Enter user ID",
                          GREY1, 213.04, 238.15, 28, "OCRAEXT")
@@ -2314,7 +2355,7 @@ def login_page(big_window_size, small_window_size, main_file_directory):
                                                    "OCRAEXT")
             
             if user_passowrd_text_rect.width > 434:
-                user_password_text = user_password_text[1:]
+                user_password_text = user_password_text[2:]
         
         if (submit_flag and len(user_id_text_stored)>0 and
             len(user_password_text_stored)>0):
@@ -2386,6 +2427,7 @@ def login_page(big_window_size, small_window_size, main_file_directory):
                     user_info.close()
             
             except:
+                #Incase a completely unexpected input gets through by chance.
                 display_text(gwindow,
                          "Enter only alpha-numeric values from ASCII",
                          uni_red, 210, 350, 18, "OCRAEXT")
