@@ -402,6 +402,8 @@ def guide(window_size, main_file_directory,
             l10 = "Note:- In the case of rank attribute being chosen, the card"
             l11 = "with lower rank number is supposedly higher rank card and"
             l12 = "out of both the cards the one with lower rank number wins"
+            l13 = "Note:- In the case of a tie, both the cards are removed from"
+            l14 = "the hands of both parties and are discarded."
 
             display_text(guide_window, "05.", white, 40, 140, 20, "OCRAEXT")
             display_text(guide_window, l1, white, 90, 140, 20, "OCRAEXT")
@@ -414,9 +416,12 @@ def guide(window_size, main_file_directory,
             display_text(guide_window, l8, white, 90, 350, 20, "OCRAEXT")
             display_text(guide_window, l9, white, 90, 380, 20, "OCRAEXT")
 
-            display_text(guide_window, l10, white, 90, 450, 20, "OCRAEXT")
-            display_text(guide_window, l11, white, 90, 480, 20, "OCRAEXT")
-            display_text(guide_window, l12, white, 90, 510, 20, "OCRAEXT")
+            display_text(guide_window, l10, white, 90, 430, 15, "OCRAEXT")
+            display_text(guide_window, l11, white, 90, 460, 15, "OCRAEXT")
+            display_text(guide_window, l12, white, 90, 490, 15, "OCRAEXT")
+            display_text(guide_window, l13, white, 90, 520, 15, "OCRAEXT")
+            display_text(guide_window, l14, white, 90, 540, 15, "OCRAEXT")
+
 
         if point == 6:
             l1 = "To choose a card from the hand simply click on the required"
@@ -625,7 +630,7 @@ def mode_selector(window_size, main_file_directory,
     multiplayer_mode_flag = False
 
     while event_flag:
-    
+        
         if solo_mode_flag:
             solo_mode_flag = False
             # Calls the solo_menu_selector function/window and breaks the loop.
@@ -649,6 +654,12 @@ def mode_selector(window_size, main_file_directory,
                     multiplayer_mode_flag = True
                     solo_mode_flag = False
 
+
+        display_text(
+            mode_selector_window,
+            "Solo Version only [multiplayer version coming soon in future]",
+            uni_red, 160, 130, 20, "OCRAEXT")
+        
         mode_selector_window.blit(solo_btn_image, solo_btn_image_rect)
         mode_selector_window.blit(multiplayer_btn_image,
                                   multiplayer_btn_image_rect)
@@ -710,7 +721,7 @@ def solo_menu_selector(window_size, main_file_directory,
         text_1 = display_text(
             solo_menu_window,
             "FREE PLAY ONLY VERSION [with seven deadly sins deck only]",
-            uni_red, 180, 130, 20, "OCRAEXT")
+            uni_red, 165, 130, 20, "OCRAEXT")
         
         solo_menu_window.blit(universes_btn_image, universes_btn_image_rect)
         solo_menu_window.blit(free_play_btn_image, free_play_btn_image_rect)
@@ -1127,6 +1138,8 @@ def game_p2(window_size , main_file_directory,
                             
                             #The card is placed on user's turn and after the 
                             #comparison is done the cpu gets its turn.
+                            #The following flags ensure that the turns are
+                            #correctly maintained.
                             card_lock_1 = True
                             turn_flag = False
                             attribute_lock_2 = False
@@ -1142,6 +1155,8 @@ def game_p2(window_size , main_file_directory,
                             place_card_flag_1 = True
                             attribute_flag = True
                             
+                            #The following flags ensure that the turns are
+                            #correctly maintained.
                             attribute_lock_1 = False
                             card_lock_1 = True
                             current_turn = True
