@@ -3,6 +3,7 @@ import os
 import time
 from sevendeadlysins import sevendeadlysins_index
 import random
+import webbrowser
 
 #colors
 black = (0, 0, 0)
@@ -58,6 +59,19 @@ def support_window(window_size, main_file_directory):
     red_cross_rect = red_cross.get_rect(center=(15, 16))
 
     while event_flag:
+        
+        if discord_flag:
+            discord_flag = False
+            webbrowser.open("https://discord.com/invite/8DJ8YEXShN")
+            event_flag = False
+            break
+        
+        elif report_a_bug_flag:
+            report_a_bug_flag = False
+            webbrowser.open("https://forms.gle/rpfm9E6fSUzqEPER7")
+            event_flag = False
+            break
+
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
